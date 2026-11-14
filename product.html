@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Карточка товара учебного интернет-магазина.">
+  <title>Беспроводные наушники SoundMax — Учебный интернет-магазин</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/product.js" defer></script>
+</head>
+<body class="page">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">ShopProject</a>
+
+      <nav class="site-nav" aria-label="Основная навигация">
+        <ul class="site-nav__list">
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html">Главная</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="catalog.html">Каталог</a></li>
+          <li class="site-nav__item"><a class="site-nav__link site-nav__link--active" href="product.html">Товар</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="order.html">Заявка</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="contacts.html">Контакты</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#advantages">Преимущества</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#popular">Популярные товары</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page__main">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a class="breadcrumbs__link" href="index.html">Главная</a>
+      <a class="breadcrumbs__link breadcrumbs__link--inner" href="catalog.html">Каталог</a>
+      <span class="breadcrumbs__current" id="product-breadcrumb">Беспроводные наушники SoundMax</span>
+    </nav>
+
+    <section class="product">
+      <img class="product__image" id="product-image" src="images/headphones.jpg" alt="Беспроводные наушники SoundMax" width="600" height="450">
+
+      <div class="product__info">
+        <h1 class="product__title" id="product-title">Беспроводные наушники SoundMax</h1>
+        <p class="product__description" id="product-description">
+          Закрытые беспроводные наушники с мягкими амбушюрами
+          и чистым звуком. До 30 часов работы без подзарядки.
+        </p>
+        <p class="product__price" id="product-price">Цена: 4990 руб.</p>
+        <a class="button button--primary" href="order.html">Оформить заявку</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <table class="product-table">
+        <caption class="product-table__caption">Характеристики товара</caption>
+        <thead>
+          <tr>
+            <th class="product-table__cell product-table__cell--head">Параметр</th>
+            <th class="product-table__cell product-table__cell--head">Значение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="product-table__cell">Категория</td>
+            <td class="product-table__cell" id="product-category">Наушники</td>
+          </tr>
+          <tr>
+            <td class="product-table__cell">Цена</td>
+            <td class="product-table__cell" id="product-table-price">4990 руб.</td>
+          </tr>
+          <tr>
+            <td class="product-table__cell">Наличие</td>
+            <td class="product-table__cell" id="product-availability">В наличии</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="table-wrapper">
+        <table class="product-table product-table--compare">
+          <caption class="product-table__caption">Сравнение товаров</caption>
+          <thead>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="col">Параметр</th>
+              <th class="product-table__cell product-table__cell--head" scope="col">Беспроводные наушники SoundMax</th>
+              <th class="product-table__cell product-table__cell--head" scope="col">Смартфон Nova X</th>
+              <th class="product-table__cell product-table__cell--head" scope="col">Умные часы Pulse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Цена</th>
+              <td class="product-table__cell">4990 руб.</td>
+              <td class="product-table__cell">24990 руб.</td>
+              <td class="product-table__cell">8990 руб.</td>
+            </tr>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Скидка</th>
+              <td class="product-table__cell">нет</td>
+              <td class="product-table__cell">5000 руб.</td>
+              <td class="product-table__cell">нет</td>
+            </tr>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Наличие</th>
+              <td class="product-table__cell">В наличии</td>
+              <td class="product-table__cell">В наличии</td>
+              <td class="product-table__cell">Нет в наличии</td>
+            </tr>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Гарантия</th>
+              <td class="product-table__cell">6 месяцев</td>
+              <td class="product-table__cell">12 месяцев</td>
+              <td class="product-table__cell">12 месяцев</td>
+            </tr>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Доставка</th>
+              <td class="product-table__cell">1–2 дня</td>
+              <td class="product-table__cell">2–3 дня</td>
+              <td class="product-table__cell">—</td>
+            </tr>
+            <tr>
+              <th class="product-table__cell product-table__cell--head" scope="row">Рейтинг</th>
+              <td class="product-table__cell">4,8</td>
+              <td class="product-table__cell">4,5</td>
+              <td class="product-table__cell">4,2</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="product-table__cell product-table__footer" colspan="4">Цены указаны в рублях, данные учебные.</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="site-footer__text">&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p class="site-footer__text">Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

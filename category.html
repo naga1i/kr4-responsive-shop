@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Популярные товары учебного интернет-магазина.">
+  <title>Популярные товары — Учебный интернет-магазин</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">ShopProject</a>
+
+      <nav class="site-nav" aria-label="Основная навигация">
+        <ul class="site-nav__list">
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html">Главная</a></li>
+          <li class="site-nav__item"><a class="site-nav__link site-nav__link--active" href="catalog.html">Каталог</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="product.html">Товар</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="order.html">Заявка</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="contacts.html">Контакты</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#advantages">Преимущества</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#popular">Популярные товары</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page__main">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a class="breadcrumbs__link" href="index.html">Главная</a>
+      <a class="breadcrumbs__link breadcrumbs__link--inner" href="catalog.html">Каталог</a>
+      <span class="breadcrumbs__current">Популярные товары</span>
+    </nav>
+
+    <section class="section category">
+      <h1 class="section__title">Популярные товары</h1>
+      <p class="section__text">
+        В этой категории собраны товары, которые чаще всего заказывают покупатели.
+      </p>
+      <p class="category__count">Товаров в категории: 3</p>
+
+      <div class="products-grid">
+        <article class="product-card product-card--featured">
+          <img class="product-card__image" src="images/headphones.jpg" alt="Беспроводные наушники SoundMax" width="600" height="450" loading="lazy">
+          <span class="product-card__badge">Хит</span>
+          <h3 class="product-card__title">Беспроводные наушники SoundMax</h3>
+          <p class="product-card__description">Краткое описание учебного товара.</p>
+          <p class="product-card__price">Цена: 4990 руб.</p>
+          <a class="button button--primary product-card__button" href="product.html?id=1">Подробнее</a>
+        </article>
+
+        <article class="product-card product-card--new">
+          <img class="product-card__image" src="images/smartwatch.jpg" alt="Умные часы Pulse" width="600" height="450" loading="lazy">
+          <span class="product-card__badge">Новинка</span>
+          <h3 class="product-card__title">Умные часы Pulse</h3>
+          <p class="product-card__description">Краткое описание учебного товара.</p>
+          <p class="product-card__price">Цена: 8990 руб.</p>
+          <a class="button button--primary product-card__button" href="product.html?id=3">Подробнее</a>
+        </article>
+
+        <article class="product-card product-card--discount">
+          <img class="product-card__image" src="images/mouse.jpg" alt="Компьютерная мышь Swift" width="600" height="450" loading="lazy">
+          <span class="product-card__badge">Скидка</span>
+          <h3 class="product-card__title">Компьютерная мышь Swift</h3>
+          <p class="product-card__description">Краткое описание учебного товара.</p>
+          <p class="product-card__price">Цена: 1290 руб. <s class="product-card__old-price">1590 руб.</s></p>
+          <a class="button button--primary product-card__button" href="product.html?id=8">Подробнее</a>
+        </article>
+      </div>
+
+      <a class="button button--secondary category__back" href="catalog.html">← Вернуться в каталог</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="site-footer__text">&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p class="site-footer__text">Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

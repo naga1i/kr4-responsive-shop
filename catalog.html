@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Каталог товаров учебного интернет-магазина.">
+  <title>Каталог товаров — Учебный интернет-магазин</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">ShopProject</a>
+
+      <nav class="site-nav" aria-label="Основная навигация">
+        <ul class="site-nav__list">
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html">Главная</a></li>
+          <li class="site-nav__item"><a class="site-nav__link site-nav__link--active" href="catalog.html">Каталог</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="product.html">Товар</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="order.html">Заявка</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="contacts.html">Контакты</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#advantages">Преимущества</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="index.html#popular">Популярные товары</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page__main">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a class="breadcrumbs__link" href="index.html">Главная</a>
+      <span class="breadcrumbs__current">Каталог</span>
+    </nav>
+
+    <section class="section">
+      <h1 class="section__title">Каталог товаров</h1>
+      <p class="section__text">
+        На этой странице представлен учебный каталог товаров.
+        В дальнейшем здесь будут добавлены фильтры, сортировка и более
+        подробные карточки.
+      </p>
+      <p class="section__text">
+        Категория: <a class="section__link" href="category.html">Популярные товары</a>
+      </p>
+    </section>
+
+    <section class="catalog-layout">
+      <aside class="catalog-filters">
+        <h2 class="catalog-filters__title">Фильтры</h2>
+
+        <form class="filters-form" action="#" method="get">
+          <fieldset class="filters-form__fieldset">
+            <legend class="filters-form__legend">Категория</legend>
+
+            <label class="filters-form__label">
+              <input class="filters-form__checkbox" type="checkbox" name="category" value="all">
+              Все товары
+            </label>
+
+            <label class="filters-form__label">
+              <input class="filters-form__checkbox" type="checkbox" name="category" value="popular">
+              Популярные
+            </label>
+
+            <label class="filters-form__label">
+              <input class="filters-form__checkbox" type="checkbox" name="category" value="new">
+              Новинки
+            </label>
+          </fieldset>
+
+          <fieldset class="filters-form__fieldset">
+            <legend class="filters-form__legend">Цена</legend>
+
+            <label class="filters-form__label" for="price-from">От</label>
+            <input class="filters-form__input" id="price-from" name="price-from" type="number" min="0" placeholder="0">
+
+            <label class="filters-form__label" for="price-to">До</label>
+            <input class="filters-form__input" id="price-to" name="price-to" type="number" min="0" placeholder="60000">
+          </fieldset>
+
+          <button class="button button--primary filters-form__button" type="submit">Применить</button>
+        </form>
+      </aside>
+
+      <section class="catalog-products">
+        <h2 class="catalog-products__title">Список товаров</h2>
+
+        <div class="products-grid">
+          <article class="product-card product-card--featured">
+            <img class="product-card__image" src="images/headphones.jpg" alt="Беспроводные наушники SoundMax" width="600" height="450" loading="lazy">
+            <span class="product-card__badge">Хит</span>
+            <h3 class="product-card__title">Беспроводные наушники SoundMax</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 4990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=1">Подробнее</a>
+          </article>
+
+          <article class="product-card product-card--discount">
+            <img class="product-card__image" src="images/phone.jpg" alt="Смартфон Nova X" width="600" height="450" loading="lazy">
+            <span class="product-card__badge">Скидка</span>
+            <h3 class="product-card__title">Смартфон Nova X</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 24990 руб. <s class="product-card__old-price">29990 руб.</s></p>
+            <a class="button button--primary product-card__button" href="product.html?id=2">Подробнее</a>
+          </article>
+
+          <article class="product-card product-card--new">
+            <img class="product-card__image" src="images/smartwatch.jpg" alt="Умные часы Pulse" width="600" height="450" loading="lazy">
+            <span class="product-card__badge">Новинка</span>
+            <h3 class="product-card__title">Умные часы Pulse</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 8990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=3">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/laptop.jpg" alt="Ноутбук AirBook 14" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Ноутбук AirBook 14</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 54990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=4">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/tablet.jpg" alt="Планшет Tab 11" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Планшет Tab 11</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 19990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=5">Подробнее</a>
+          </article>
+
+          <article class="product-card product-card--new">
+            <img class="product-card__image" src="images/speaker.jpg" alt="Портативная колонка Boom" width="600" height="450" loading="lazy">
+            <span class="product-card__badge">Новинка</span>
+            <h3 class="product-card__title">Портативная колонка Boom</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 6490 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=6">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/keyboard.jpg" alt="Беспроводная клавиатура KeyPro" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Беспроводная клавиатура KeyPro</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 2990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=7">Подробнее</a>
+          </article>
+
+          <article class="product-card product-card--discount">
+            <img class="product-card__image" src="images/mouse.jpg" alt="Компьютерная мышь Swift" width="600" height="450" loading="lazy">
+            <span class="product-card__badge">Скидка</span>
+            <h3 class="product-card__title">Компьютерная мышь Swift</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 1290 руб. <s class="product-card__old-price">1590 руб.</s></p>
+            <a class="button button--primary product-card__button" href="product.html?id=8">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/gamepad.jpg" alt="Геймпад GameStick" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Геймпад GameStick</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 3990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=9">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/camera.jpg" alt="Фотоаппарат моментальной печати Snap" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Фотоаппарат моментальной печати Snap</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 9990 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=10">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/watch.jpg" alt="Фитнес-часы Lite" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Фитнес-часы Lite</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 3490 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=11">Подробнее</a>
+          </article>
+
+          <article class="product-card">
+            <img class="product-card__image" src="images/backpack.jpg" alt="Городской рюкзак Urban" width="600" height="450" loading="lazy">
+            <h3 class="product-card__title">Городской рюкзак Urban</h3>
+            <p class="product-card__description">Краткое описание учебного товара.</p>
+            <p class="product-card__price">Цена: 2490 руб.</p>
+            <a class="button button--primary product-card__button" href="product.html?id=12">Подробнее</a>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="site-footer__text">&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p class="site-footer__text">Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>
