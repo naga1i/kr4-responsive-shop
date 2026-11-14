@@ -40,7 +40,7 @@
 ## Структура проекта
 
 ```text
-kr3-responsive-shop/
+kr4-responsive-shop/
 ├── index.html
 ├── catalog.html
 ├── category.html
@@ -57,6 +57,11 @@ kr3-responsive-shop/
 ├── README.md
 └── .gitignore
 ```
+
+## Ссылки на проект
+
+- Репозиторий: https://github.com/naga1i/kr4-responsive-shop
+- GitHub Pages: https://naga1i.github.io/kr4-responsive-shop/
 
 ## Используемые технологии
 
