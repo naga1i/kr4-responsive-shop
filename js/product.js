@@ -1,133 +1,122 @@
-// Данные всех товаров магазина.
-const products = {
-  1: {
-    name: 'Беспроводные наушники SoundMax',
-    image: 'images/headphones.jpg',
-    category: 'Наушники',
-    price: 4990,
-    available: true,
-    description: 'Закрытые беспроводные наушники с мягкими амбушюрами и чистым звуком. До 30 часов работы без подзарядки.',
-  },
-  2: {
-    name: 'Смартфон Nova X',
-    image: 'images/phone.jpg',
-    category: 'Смартфоны',
-    price: 24990,
-    oldPrice: 29990,
-    available: true,
-    description: 'Смартфон с ярким экраном 6,1 дюйма, двойной камерой и памятью 128 ГБ.',
-  },
-  3: {
-    name: 'Умные часы Pulse',
-    image: 'images/smartwatch.jpg',
-    category: 'Умные часы',
-    price: 8990,
-    available: false,
-    description: 'Умные часы с пульсометром, шагомером и уведомлениями со смартфона.',
-  },
-  4: {
-    name: 'Ноутбук AirBook 14',
-    image: 'images/laptop.jpg',
-    category: 'Ноутбуки',
-    price: 54990,
-    available: true,
-    description: 'Лёгкий ноутбук с экраном 14 дюймов для учёбы и работы. Весит всего 1,3 кг.',
-  },
-  5: {
-    name: 'Планшет Tab 11',
-    image: 'images/tablet.jpg',
-    category: 'Планшеты',
-    price: 19990,
-    available: true,
-    description: 'Планшет с экраном 11 дюймов и поддержкой стилуса. Удобен для рисования и просмотра видео.',
-  },
-  6: {
-    name: 'Портативная колонка Boom',
-    image: 'images/speaker.jpg',
-    category: 'Аудиотехника',
-    price: 6490,
-    available: true,
-    description: 'Влагозащищённая Bluetooth-колонка с громким звуком и 12 часами работы.',
-  },
-  7: {
-    name: 'Беспроводная клавиатура KeyPro',
-    image: 'images/keyboard.jpg',
-    category: 'Аксессуары',
-    price: 2990,
-    available: true,
-    description: 'Тонкая беспроводная клавиатура с тихими клавишами и русской раскладкой.',
-  },
-  8: {
-    name: 'Компьютерная мышь Swift',
-    image: 'images/mouse.jpg',
-    category: 'Аксессуары',
-    price: 1290,
-    oldPrice: 1590,
-    available: true,
-    description: 'Беспроводная мышь удобной формы с точным сенсором.',
-  },
-  9: {
-    name: 'Геймпад GameStick',
-    image: 'images/gamepad.jpg',
-    category: 'Игры',
-    price: 3990,
-    available: true,
-    description: 'Беспроводной геймпад для компьютера и приставки с вибрацией.',
-  },
-  10: {
-    name: 'Фотоаппарат моментальной печати Snap',
-    image: 'images/camera.jpg',
-    category: 'Фототехника',
-    price: 9990,
-    available: true,
-    description: 'Фотоаппарат, который печатает снимок сразу после съёмки.',
-  },
-  11: {
-    name: 'Фитнес-часы Lite',
-    image: 'images/watch.jpg',
-    category: 'Умные часы',
-    price: 3490,
-    available: true,
-    description: 'Лёгкие фитнес-часы для тренировок: считают шаги, калории и сон.',
-  },
-  12: {
-    name: 'Городской рюкзак Urban',
-    image: 'images/backpack.jpg',
-    category: 'Аксессуары',
-    price: 2490,
-    available: true,
-    description: 'Вместительный рюкзак с отделением для ноутбука до 15 дюймов.',
-  },
-};
+// ===============================
+// Динамическое заполнение страницы карточки товара (product.html?id=...)
+// ===============================
 
-// Получаем номер товара из адреса страницы, например product.html?id=2.
-const productId = new URLSearchParams(window.location.search).get('id') || '1';
-const product = products[productId];
+(function () {
+  const store = window.ElectroStore;
+  if (!store) return;
 
-// Если товар найден, подставляем его данные на страницу.
-if (product) {
-  const priceText = `Цена: ${product.price} руб.`;
+  const productSection = document.getElementById('product-detail');
+  if (!productSection) return;
 
-  document.title = `${product.name} — Учебный интернет-магазин`;
-  document.getElementById('product-breadcrumb').textContent = product.name;
-  document.getElementById('product-title').textContent = product.name;
-  document.getElementById('product-description').textContent = product.description;
-  document.getElementById('product-category').textContent = product.category;
-  document.getElementById('product-table-price').textContent = `${product.price} руб.`;
-  document.getElementById('product-availability').textContent = product.available ? 'В наличии' : 'Нет в наличии';
+  const productId = Number(new URLSearchParams(window.location.search).get('id')) || 1;
+  const product = store.getProductById(productId);
 
-  const image = document.getElementById('product-image');
-  image.src = product.image;
-  image.alt = product.name;
+  document.title = `${product.name} — ElectroMirea`;
 
-  // Для товара со скидкой показываем старую цену зачёркнутой.
-  const price = document.getElementById('product-price');
-  price.textContent = priceText;
+  const breadcrumbEl = document.getElementById('product-breadcrumb');
+  const titleEl = document.getElementById('product-title');
+  const descEl = document.getElementById('product-description');
+  const skuEl = document.getElementById('product-sku');
+  const catChipEl = document.getElementById('product-category-chip');
+  const warrantyChipEl = document.getElementById('product-warranty-chip');
+  const ratingChipEl = document.getElementById('product-rating-chip');
+  const imageEl = document.getElementById('product-image');
+  const badgeEl = document.getElementById('product-badge');
+  const priceEl = document.getElementById('product-price');
+  const quickBtn = document.getElementById('product-quick-order');
+  const configLink = document.getElementById('product-config-link');
+  const favBtn = document.getElementById('product-fav-btn');
+  const specsTbody = document.getElementById('product-specs-tbody');
 
-  if (product.oldPrice) {
-    const oldPrice = document.createElement('s');
-    oldPrice.className = 'product-card__old-price';
-    oldPrice.textContent = `${product.oldPrice} руб.`;
-    price.append(' ', oldPrice);
+  if (breadcrumbEl) breadcrumbEl.textContent = product.name;
+  if (titleEl) titleEl.textContent = product.name;
+  if (descEl) descEl.textContent = product.description;
+  if (skuEl) skuEl.textContent = `Артикул: ${product.sku}`;
+  if (catChipEl) catChipEl.textContent = product.categoryTitle;
+  if (warrantyChipEl) warrantyChipEl.textContent = `Гарантия: ${product.warranty}`;
+  if (ratingChipEl) ratingChipEl.textContent = `★ ${product.rating.toFixed(1)}`;
+
+  if (imageEl) {
+    imageEl.src = product.image;
+    imageEl.alt = product.name;
   }
-}
+
+  if (badgeEl) {
+    if (product.badge) {
+      badgeEl.textContent = product.badge;
+      badgeEl.hidden = false;
+    } else {
+      badgeEl.hidden = true;
+    }
+  }
+
+  if (priceEl) {
+    priceEl.textContent = store.formatPrice(product.price);
+    if (product.oldPrice) {
+      const oldEl = document.createElement('s');
+      oldEl.className = 'product-card__old-price';
+      oldEl.style.marginLeft = '10px';
+      oldEl.textContent = store.formatPrice(product.oldPrice);
+      priceEl.appendChild(oldEl);
+    }
+  }
+
+  if (quickBtn) {
+    quickBtn.dataset.productId = String(product.id);
+    if (!product.available) {
+      quickBtn.disabled = true;
+      quickBtn.textContent = 'Нет в наличии';
+    }
+  }
+
+  if (configLink) {
+    configLink.href = `order.html?id=${product.id}`;
+  }
+
+  const updateProductFavButton = () => {
+    if (!favBtn) return;
+    const fav = store.isFavorite(product.id);
+    favBtn.textContent = fav ? '♥ В избранном' : '♡ В избранное';
+    favBtn.classList.toggle('button--primary', fav);
+    favBtn.classList.toggle('button--secondary', !fav);
+  };
+
+  if (favBtn) {
+    favBtn.addEventListener('click', () => {
+      store.toggleFavorite(product.id);
+      updateProductFavButton();
+    });
+    window.addEventListener('electrostore:change', updateProductFavButton);
+    updateProductFavButton();
+  }
+
+  if (specsTbody) {
+    const rows = [
+      ['Бренд', product.brand],
+      ['Категория', product.categoryTitle],
+      ['Артикул', product.sku],
+      ['Цена', store.formatPrice(product.price)],
+      ['Наличие в шоуруме', product.available ? 'В наличии (самовывоз сегодня)' : 'Временно нет в наличии'],
+      ['Официальная гарантия', product.warranty],
+      ...Object.entries(product.specs || {}),
+    ];
+
+    specsTbody.innerHTML = '';
+    rows.forEach(([param, val]) => {
+      const tr = document.createElement('tr');
+      const th = document.createElement('th');
+      th.className = 'product-table__cell product-table__cell--head';
+      th.scope = 'row';
+      th.textContent = param;
+
+      const td = document.createElement('td');
+      td.className = 'product-table__cell';
+      td.textContent = val;
+
+      tr.appendChild(th);
+      tr.appendChild(td);
+      specsTbody.appendChild(tr);
+    });
+  }
+})();

@@ -1,147 +1,183 @@
-// Получаем модальное окно по id.
-const orderDialog = document.getElementById('order-dialog');
+// ===============================
+// Общая клиентская логика страниц: кнопка «Наверх», модальное окно быстрого заказа, избранное на статических карточках
+// ===============================
 
-// Получаем все кнопки заказа в карточках товаров.
-const orderButtons = document.querySelectorAll('.product-card__button');
+(function () {
+  const store = window.ElectroStore;
+  if (!store) return;
 
-// Получаем кнопку закрытия модального окна.
-const closeDialogButton = document.getElementById('close-order-dialog');
+  // 1. Плавный возврат «Наверх» и блокировка прокрутки фона для <dialog>
+  const scrollTopButton = document.getElementById('scroll-top');
+  let pageScrollPosition = 0;
 
-// Получаем крестик закрытия окна.
-const closeDialogCross = document.getElementById('close-order-dialog-cross');
+  const lockPageScroll = () => {
+    pageScrollPosition = window.scrollY;
+    document.body.style.top = `-${pageScrollPosition}px`;
+    document.body.classList.add('page--locked');
+  };
 
-// Получаем строку с названием выбранного товара.
-const dialogProductName = document.getElementById('dialog-product-name');
+  const unlockPageScroll = () => {
+    document.body.classList.remove('page--locked');
+    document.body.style.top = '';
+    window.scrollTo({ top: pageScrollPosition, behavior: 'instant' });
+  };
 
-// Получаем скрытое поле, в которое будет записан выбранный товар.
-const selectedProductInput = document.getElementById('selected-product');
+  if (scrollTopButton) {
+    const updateScrollTopButton = () => {
+      scrollTopButton.hidden = window.scrollY < 280;
+    };
 
-// Получаем кнопку возврата наверх.
-const scrollTopButton = document.getElementById('scroll-top');
-
-// Запоминаем положение страницы перед открытием окна.
-let pageScrollPosition = 0;
-
-// Фиксируем страницу и запрещаем прокрутку фона.
-const lockPageScroll = () => {
-  pageScrollPosition = window.scrollY;
-  document.body.style.top = `-${pageScrollPosition}px`;
-  document.body.classList.add('page--locked');
-};
-
-// Возвращаем прокрутку после закрытия окна.
-const unlockPageScroll = () => {
-  document.body.classList.remove('page--locked');
-  document.body.style.top = '';
-  window.scrollTo({ top: pageScrollPosition, behavior: 'instant' });
-};
-
-// Показываем кнопку наверх после прокрутки страницы.
-const updateScrollTopButton = () => {
-  scrollTopButton.hidden = window.scrollY < 300;
-};
-
-// Перебираем все кнопки «Заказать».
-orderButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    // Получаем название товара из data-атрибута.
-    const productName = button.dataset.product;
-
-    // Записываем название товара в скрытое поле формы.
-    selectedProductInput.value = productName;
-
-    // Показываем название товара в окне.
-    dialogProductName.textContent = `Вы выбрали: ${productName}`;
-
-    // Открываем модальное окно.
-    orderDialog.showModal();
-
-    // Запрещаем прокрутку фоновой страницы.
-    lockPageScroll();
-  });
-});
-
-// Закрываем модальное окно по кнопке «Закрыть».
-closeDialogButton.addEventListener('click', () => {
-  orderDialog.close();
-});
-
-// Закрываем модальное окно по крестику.
-closeDialogCross.addEventListener('click', () => {
-  orderDialog.close();
-});
-
-// Закрываем модальное окно по клику на тёмный фон.
-orderDialog.addEventListener('click', (event) => {
-  if (event.target === orderDialog) {
-    orderDialog.close();
+    window.addEventListener('scroll', updateScrollTopButton, { passive: true });
+    scrollTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    updateScrollTopButton();
   }
-});
 
-// Возвращаем прокрутку при любом способе закрытия окна.
-orderDialog.addEventListener('close', unlockPageScroll);
+  // 2. Синхронизация кнопок «В избранное» на статических HTML-карточках
+  const syncStaticFavButtons = () => {
+    document.querySelectorAll('.js-fav-toggle').forEach((btn) => {
+      const id = Number(btn.dataset.productId);
+      const active = store.isFavorite(id);
+      btn.classList.toggle('fav-btn--active', active);
+      btn.setAttribute('aria-pressed', String(active));
+      const label = active ? 'Убрать из избранного' : 'Добавить в избранное';
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
+    });
+  };
 
-// Следим за прокруткой страницы.
-window.addEventListener('scroll', updateScrollTopButton);
-
-// Плавно прокручиваем страницу наверх.
-scrollTopButton.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-});
-
-// Устанавливаем правильное состояние кнопки при загрузке страницы.
-updateScrollTopButton();
-
-// Получаем форму заявки.
-const orderForm = document.getElementById('order-form');
-
-// Получаем сообщение об успешной отправке.
-const successMessage = document.getElementById('success-message');
-
-// При очистке формы убираем подсветку ошибок.
-orderForm.addEventListener('reset', () => {
-  Array.from(orderForm.elements).forEach((element) => {
-    element.removeAttribute('aria-invalid');
-  });
-});
-
-// Обрабатываем отправку формы.
-orderForm.addEventListener('submit', (event) => {
-  // Отменяем стандартную отправку формы,
-  // потому что backend пока не подключён.
-  event.preventDefault();
-
-  // Сбрасываем предыдущие признаки ошибок.
-  const formElements = Array.from(orderForm.elements);
-
-  formElements.forEach((element) => {
-    if (element.willValidate) {
-      element.removeAttribute('aria-invalid');
+  document.addEventListener('click', (event) => {
+    const favBtn = event.target.closest('.js-fav-toggle');
+    if (favBtn) {
+      event.preventDefault();
+      store.toggleFavorite(Number(favBtn.dataset.productId));
+      syncStaticFavButtons();
     }
   });
 
-  // Проверяем встроенные HTML-ограничения формы.
-  if (!orderForm.checkValidity()) {
-    formElements.forEach((element) => {
-      if (element.willValidate && !element.checkValidity()) {
-        element.setAttribute('aria-invalid', 'true');
+  window.addEventListener('electrostore:change', syncStaticFavButtons);
+  syncStaticFavButtons();
+
+  // 3. Модальное окно быстрого заказа (<dialog id="order-dialog">)
+  const orderDialog = document.getElementById('order-dialog');
+  const orderForm = document.getElementById('order-form');
+  const closeDialogButton = document.getElementById('close-order-dialog');
+  const closeDialogCross = document.getElementById('close-order-dialog-cross');
+  const dialogProductName = document.getElementById('dialog-product-name');
+  const quickProductSelect = document.getElementById('quick-product');
+  const successMessage = document.getElementById('success-message');
+
+  const openQuickOrder = (productIdentifier) => {
+    if (!orderDialog || !orderForm) return;
+
+    const product =
+      typeof productIdentifier === 'number' || /^\d+$/.test(String(productIdentifier))
+        ? store.getProductById(Number(productIdentifier))
+        : store.getProductByName(productIdentifier);
+
+    if (quickProductSelect && product) {
+      quickProductSelect.value = String(product.id);
+    }
+
+    if (dialogProductName && product) {
+      dialogProductName.textContent = `Вы выбрали: ${product.name} (${store.formatPrice(product.price)})`;
+    }
+
+    // Автоподстановка контактов из Личного кабинета, если поля пустые
+    const profile = store.getProfile();
+    const nameInput = document.getElementById('order-name');
+    const phoneInput = document.getElementById('order-phone');
+    const emailInput = document.getElementById('order-email');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name || '';
+    if (phoneInput && !phoneInput.value) phoneInput.value = profile.phone || '';
+    if (emailInput && !emailInput.value) emailInput.value = profile.email || '';
+
+    orderDialog.showModal();
+    lockPageScroll();
+  };
+
+  // Экспортируем функцию открытия модального окна для React-компонентов
+  window.openQuickOrderModal = openQuickOrder;
+
+  // Делегирование клика по любой кнопке .js-quick-order
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('.js-quick-order');
+    if (!trigger || trigger.disabled) return;
+    event.preventDefault();
+    const prod = trigger.dataset.productId || trigger.dataset.product || 4;
+    openQuickOrder(prod);
+  });
+
+  if (orderDialog && orderForm) {
+    if (quickProductSelect && dialogProductName) {
+      quickProductSelect.addEventListener('change', () => {
+        const p = store.getProductById(Number(quickProductSelect.value));
+        dialogProductName.textContent = `Вы выбрали: ${p.name} (${store.formatPrice(p.price)})`;
+      });
+    }
+
+    if (closeDialogButton) {
+      closeDialogButton.addEventListener('click', () => orderDialog.close());
+    }
+
+    if (closeDialogCross) {
+      closeDialogCross.addEventListener('click', () => orderDialog.close());
+    }
+
+    orderDialog.addEventListener('click', (event) => {
+      if (event.target === orderDialog) {
+        orderDialog.close();
       }
     });
 
-    // Показываем стандартные сообщения браузера.
-    orderForm.reportValidity();
-    return;
+    orderDialog.addEventListener('close', unlockPageScroll);
+
+    orderForm.addEventListener('reset', () => {
+      Array.from(orderForm.elements).forEach((el) => el.removeAttribute('aria-invalid'));
+    });
+
+    orderForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formElements = Array.from(orderForm.elements);
+      formElements.forEach((el) => {
+        if (el.willValidate) el.removeAttribute('aria-invalid');
+      });
+
+      if (!orderForm.checkValidity()) {
+        formElements.forEach((el) => {
+          if (el.willValidate && !el.checkValidity()) {
+            el.setAttribute('aria-invalid', 'true');
+          }
+        });
+        orderForm.reportValidity();
+        return;
+      }
+
+      const chosenId = quickProductSelect ? Number(quickProductSelect.value) : 4;
+      const product = store.getProductById(chosenId);
+      const qtyInput = document.getElementById('order-qty');
+      const qty = Math.max(1, Number(qtyInput ? qtyInput.value : 1));
+      const deliverySelect = document.getElementById('order-delivery');
+      const deliveryLabel = deliverySelect
+        ? deliverySelect.options[deliverySelect.selectedIndex].text
+        : 'Самовывоз из шоурума';
+
+      const { order, bonusEarned } = store.addOrder({
+        productName: qty > 1 ? `${product.name} × ${qty} шт.` : product.name,
+        addons: [],
+        delivery: deliveryLabel,
+        total: product.price * qty,
+      });
+
+      if (successMessage) {
+        successMessage.innerHTML = `<strong>Заказ #${order.orderNumber} успешно оформлен!</strong> Начислено <strong>+${bonusEarned} бонусов</strong> в <a href="account.html">Личном кабинете</a>. Менеджер свяжется с вами в течение 10 минут.`;
+        successMessage.hidden = false;
+      }
+
+      orderForm.reset();
+      orderDialog.close();
+    });
   }
-
-  // Показываем сообщение об успешной отправке.
-  successMessage.hidden = false;
-
-  // Очищаем форму.
-  orderForm.reset();
-
-  // Закрываем модальное окно.
-  orderDialog.close();
-});
+})();

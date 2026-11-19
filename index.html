@@ -3,299 +3,619 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Главная страница учебного интернет-магазина.">
-  <title>Главная — Учебный интернет-магазин</title>
+  <meta name="description" content="CoreMirea — магазин комплектующих для сборки ПК: видеокарты GeForce RTX, процессоры Ryzen и Intel Core, память DDR5, NVMe SSD и кастомная сборка в Москве.">
+  <title>Главная — CoreMirea • Комплектующие и сборка ПК</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <script src="js/store.js" defer></script>
+  <script src="js/vendor/react.production.min.js" defer></script>
+  <script src="js/vendor/react-dom.production.min.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/react-ui.js" defer></script>
 </head>
 <body class="page">
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="site-header__logo" href="index.html">ShopProject</a>
+      <a class="site-header__logo" href="index.html">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+        </span>
+        <span>CoreMirea</span>
+        <span class="site-header__logo-badge">PC LAB</span>
+      </a>
 
       <nav class="site-nav" aria-label="Основная навигация">
         <ul class="site-nav__list">
           <li class="site-nav__item"><a class="site-nav__link site-nav__link--active" href="index.html">Главная</a></li>
           <li class="site-nav__item"><a class="site-nav__link" href="catalog.html">Каталог</a></li>
-          <li class="site-nav__item"><a class="site-nav__link" href="product.html">Товар</a></li>
-          <li class="site-nav__item"><a class="site-nav__link" href="order.html">Заявка</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="about.html">О магазине</a></li>
           <li class="site-nav__item"><a class="site-nav__link" href="contacts.html">Контакты</a></li>
-          <li class="site-nav__item"><a class="site-nav__link" href="index.html#advantages">Преимущества</a></li>
-          <li class="site-nav__item"><a class="site-nav__link" href="index.html#popular">Популярные товары</a></li>
         </ul>
       </nav>
+
+      <div class="site-header__actions" id="react-header-actions">
+        <a class="header-action-link" href="favorites.html">Избранное</a>
+        <a class="header-action-link" href="account.html">Кабинет</a>
+        <button class="button button--primary button--sm js-quick-order" type="button" data-product-id="1">Быстрый заказ</button>
+      </div>
     </div>
   </header>
 
   <main class="page__main">
+    <div class="success-message" id="success-message" role="status" hidden></div>
+
     <section class="hero">
       <div class="hero__content">
-        <h1 class="hero__title">Учебный интернет-магазин</h1>
+        <div class="hero__meta">
+          <span class="hero__tag">Сборка месяца</span>
+          <span class="hero__spec">2K Ultra • 180+ FPS</span>
+          <span>Ryzen 7 7800X3D &bull; RTX 4070 SUPER &bull; 32 ГБ DDR5</span>
+        </div>
+
+        <h1 class="hero__title">Комплектующие для мощной сборки ПК</h1>
         <p class="hero__text">
-          Это стартовая страница учебного frontend-проекта.
-          В дальнейшем на её основе будет разработан многостраничный сайт
-          интернет-магазина или каталога услуг.
+          Подбирайте оригинальные видеокарты GeForce RTX, процессоры AMD Ryzen и Intel Core, скоростные накопители NVMe PCIe 4.0 и водяное охлаждение с автоматической проверкой совместимости сокетов.
         </p>
-        <a class="button button--primary" href="#popular">Перейти к товарам</a>
+
+        <div>
+          <span class="hero__chips-label">Популярные категории и подборки:</span>
+          <div class="hero__chips-list">
+            <a class="hero__chip" href="catalog.html?category=gpu">Видеокарты RTX</a>
+            <a class="hero__chip" href="catalog.html?category=cpu">Процессоры AM5 / 1700</a>
+            <a class="hero__chip" href="catalog.html?category=memory">DDR5-6000 &bull; NVMe</a>
+            <a class="hero__chip" href="category.html">Хиты для 2K-сборки</a>
+          </div>
+        </div>
+
+        <div class="hero__actions">
+          <a class="button button--primary button--lg" href="order.html">Собрать ПК в конфигураторе</a>
+          <a class="button button--outline-light" href="catalog.html">Открыть весь каталог</a>
+        </div>
       </div>
 
       <picture class="hero__media">
         <source media="(min-width: 1200px)" srcset="images/hero-desktop.jpg">
         <source media="(min-width: 768px)" srcset="images/hero-tablet.jpg">
         <img
+          class="hero__image"
           src="images/hero-mobile.jpg"
-          alt="Каталог учебных товаров"
+          alt="Игровой системный блок с жидкостным охлаждением и голубой ARGB-подсветкой"
           width="640"
           height="360"
-          class="hero__image"
         >
       </picture>
     </section>
 
     <section class="section" id="advantages">
-      <h2 class="section__title">Преимущества проекта</h2>
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">Почему ПК собирают в CoreMirea</h2>
+          <p class="section__text">Инженерный подход к каждой детали — от ревизии печатной платы до финального стресс-теста.</p>
+        </div>
+      </div>
 
-      <ul class="advantages-list">
-        <li class="advantages-list__item">понятная HTML-структура;</li>
-        <li class="advantages-list__item">семантические блоки страницы;</li>
-        <li class="advantages-list__item">подключение внешнего CSS-файла;</li>
-        <li class="advantages-list__item">подготовка к разработке многостраничного сайта.</li>
-      </ul>
+      <div class="advantages-grid">
+        <article class="advantage-card">
+          <img
+            class="advantage-card__image"
+            src="images/adv-custom.jpg"
+            alt="Кастомная сборка игрового ПК с аккуратной укладкой кабелей"
+            width="700"
+            height="440"
+            loading="lazy"
+          >
+          <div class="advantage-card__body">
+            <h3 class="advantage-card__title">Чистый кабель-менеджмент</h3>
+            <p class="advantage-card__text">
+              Собираем системные блоки вручную за 24 часа, укладываем каждый кабель по контуру шасси и настраиваем кривые оборотов PWM-вентиляторов.
+            </p>
+          </div>
+        </article>
+
+        <article class="advantage-card">
+          <img
+            class="advantage-card__image"
+            src="images/adv-stress.jpg"
+            alt="Инженер за диагностическим стендом тестирования комплектующих"
+            width="700"
+            height="440"
+            loading="lazy"
+          >
+          <div class="advantage-card__body">
+            <h3 class="advantage-card__title">4 часа стресс-тестов</h3>
+            <p class="advantage-card__text">
+              Прошиваем актуальный BIOS, активируем профили EXPO / XMP 3.0 и проверяем стабильность в OCCT, FurMark и TestMem5 с выдачей отчёта температур.
+            </p>
+          </div>
+        </article>
+
+        <article class="advantage-card">
+          <img
+            class="advantage-card__image"
+            src="images/adv-delivery.jpg"
+            alt="Склад официальных комплектующих с быстрой отгрузкой"
+            width="700"
+            height="440"
+            loading="lazy"
+          >
+          <div class="advantage-card__body">
+            <h3 class="advantage-card__title">Прямые поставки и гарантия до 7 лет</h3>
+            <p class="advantage-card__text">
+              Только новые комплектующие в заводских пломбах на собственном складе в Москве и расширенная гарантия до 84 месяцев на блоки питания и память.
+            </p>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section class="section" id="popular">
-      <h2 class="section__title">Популярные товары</h2>
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">Хиты для сборки игрового и рабочего ПК</h2>
+          <p class="section__text">Самые востребованные позиции каталога с проверенной совместимостью и актуальными ценами.</p>
+        </div>
+        <a class="button button--secondary" href="catalog.html">Все 12 комплектующих</a>
+      </div>
+
       <div class="products-grid">
+        <article class="product-card product-card--featured">
+          <div class="product-card__media">
+            <img
+              class="product-card__image"
+              src="images/gpu-rtx4070s-640.jpg"
+              srcset="images/gpu-rtx4070s-320.jpg 320w,
+                      images/gpu-rtx4070s-480.jpg 480w,
+                      images/gpu-rtx4070s-640.jpg 640w,
+                      images/gpu-rtx4070s-960.jpg 960w"
+              sizes="(max-width: 639px) calc(100vw - 32px),
+                     (max-width: 1023px) calc(50vw - 24px),
+                     (max-width: 1279px) calc(33vw - 24px),
+                     280px"
+              alt="Видеокарта Palit GeForce RTX 4070 SUPER JetStream OC 12GB"
+              width="640"
+              height="480"
+              loading="lazy"
+            >
+            <span class="product-card__badge">Хит</span>
+            <button class="fav-btn js-fav-toggle" type="button" data-product-id="1" aria-label="Добавить в избранное">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="product-card__meta">
+            <span class="product-card__category">Видеокарты</span>
+            <span>PC-4070S &bull; ★ 5.0</span>
+          </div>
+          <h3 class="product-card__title">
+            <a class="product-card__title-link" href="product.html?id=1">Видеокарта Palit GeForce RTX 4070 SUPER JetStream OC 12GB</a>
+          </h3>
+          <p class="product-card__description">12 ГБ GDDR6X, 7168 ядер CUDA, DLSS 3.5 Frame Generation, тихое 3-вентиляторное охлаждение.</p>
+          <div class="product-card__price-row">
+            <p class="product-card__price">83 490 руб.</p>
+            <s class="product-card__old-price">88 990 руб.</s>
+          </div>
+          <div class="product-card__actions">
+            <button class="button button--primary button--sm product-card__button js-quick-order" type="button" data-product-id="1">В заказ</button>
+            <a class="button button--secondary button--sm" href="product.html?id=1">Характеристики</a>
+          </div>
+        </article>
 
-      <article class="product-card product-card--featured">
-        <img
-          class="product-card__image"
-          src="images/headphones-640.jpg"
-          srcset="images/headphones-320.jpg 320w,
-                  images/headphones-480.jpg 480w,
-                  images/headphones-640.jpg 640w,
-                  images/headphones-960.jpg 960w"
-          sizes="(max-width: 639px) calc(100vw - 32px),
-                 (max-width: 1023px) calc(50vw - 24px),
-                 (max-width: 1279px) calc(33vw - 24px),
-                 280px"
-          alt="Беспроводные наушники SoundMax"
-          width="640"
-          height="480"
-          loading="lazy"
-        >
-        <span class="product-card__badge">Хит</span>
-        <h3 class="product-card__title">Беспроводные наушники SoundMax</h3>
-        <p class="product-card__description">Краткое описание учебного товара.</p>
-        <p class="product-card__price">Цена: 4990 руб.</p>
-        <button class="button button--primary product-card__button" type="button" data-product="Беспроводные наушники SoundMax">
-          Заказать
-        </button>
-      </article>
+        <article class="product-card product-card--featured">
+          <div class="product-card__media">
+            <img
+              class="product-card__image"
+              src="images/cpu-ryzen7800x3d-640.jpg"
+              srcset="images/cpu-ryzen7800x3d-320.jpg 320w,
+                      images/cpu-ryzen7800x3d-480.jpg 480w,
+                      images/cpu-ryzen7800x3d-640.jpg 640w,
+                      images/cpu-ryzen7800x3d-960.jpg 960w"
+              sizes="(max-width: 639px) calc(100vw - 32px),
+                     (max-width: 1023px) calc(50vw - 24px),
+                     (max-width: 1279px) calc(33vw - 24px),
+                     280px"
+              alt="Процессор AMD Ryzen 7 7800X3D OEM"
+              width="640"
+              height="480"
+              loading="lazy"
+            >
+            <span class="product-card__badge">Хит</span>
+            <button class="fav-btn js-fav-toggle" type="button" data-product-id="2" aria-label="Добавить в избранное">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="product-card__meta">
+            <span class="product-card__category">Процессоры</span>
+            <span>Socket AM5 &bull; ★ 5.0</span>
+          </div>
+          <h3 class="product-card__title">
+            <a class="product-card__title-link" href="product.html?id=2">Процессор AMD Ryzen 7 7800X3D OEM (AM5, 8 ядер)</a>
+          </h3>
+          <p class="product-card__description">8 ядер / 16 потоков до 5.0 ГГц, вертикальный кэш 3D V-Cache L3 96 МБ — лидер игровых сборок.</p>
+          <div class="product-card__price-row">
+            <p class="product-card__price">30 750 руб.</p>
+          </div>
+          <div class="product-card__actions">
+            <button class="button button--primary button--sm product-card__button js-quick-order" type="button" data-product-id="2">В заказ</button>
+            <a class="button button--secondary button--sm" href="product.html?id=2">Характеристики</a>
+          </div>
+        </article>
 
-      <article class="product-card product-card--discount">
-        <img
-          class="product-card__image"
-          src="images/phone-640.jpg"
-          srcset="images/phone-320.jpg 320w,
-                  images/phone-480.jpg 480w,
-                  images/phone-640.jpg 640w,
-                  images/phone-960.jpg 960w"
-          sizes="(max-width: 639px) calc(100vw - 32px),
-                 (max-width: 1023px) calc(50vw - 24px),
-                 (max-width: 1279px) calc(33vw - 24px),
-                 280px"
-          alt="Смартфон Nova X"
-          width="640"
-          height="480"
-          loading="lazy"
-        >
-        <span class="product-card__badge">Скидка</span>
-        <h3 class="product-card__title">Смартфон Nova X</h3>
-        <p class="product-card__description">Краткое описание учебного товара.</p>
-        <p class="product-card__price">Цена: 24990 руб. <s class="product-card__old-price">29990 руб.</s></p>
-        <button class="button button--primary product-card__button" type="button" data-product="Смартфон Nova X">
-          Заказать
-        </button>
-      </article>
+        <article class="product-card product-card--featured">
+          <div class="product-card__media">
+            <img
+              class="product-card__image"
+              src="images/ram-ddr5-640.jpg"
+              srcset="images/ram-ddr5-320.jpg 320w,
+                      images/ram-ddr5-480.jpg 480w,
+                      images/ram-ddr5-640.jpg 640w,
+                      images/ram-ddr5-960.jpg 960w"
+              sizes="(max-width: 639px) calc(100vw - 32px),
+                     (max-width: 1023px) calc(50vw - 24px),
+                     (max-width: 1279px) calc(33vw - 24px),
+                     280px"
+              alt="Оперативная память G.Skill Trident Z5 RGB 32 ГБ DDR5-6000"
+              width="640"
+              height="480"
+              loading="lazy"
+            >
+            <span class="product-card__badge">Хит</span>
+            <button class="fav-btn js-fav-toggle" type="button" data-product-id="3" aria-label="Добавить в избранное">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="product-card__meta">
+            <span class="product-card__category">Память и SSD</span>
+            <span>DDR5 CL30 &bull; ★ 4.9</span>
+          </div>
+          <h3 class="product-card__title">
+            <a class="product-card__title-link" href="product.html?id=3">ОЗУ G.Skill Trident Z5 RGB 32 ГБ (2×16 ГБ) DDR5-6000</a>
+          </h3>
+          <p class="product-card__description">Чипы Hynix A-die, низкие тайминги CL30, готовые профили разгона AMD EXPO и Intel XMP 3.0.</p>
+          <div class="product-card__price-row">
+            <p class="product-card__price">13 490 руб.</p>
+          </div>
+          <div class="product-card__actions">
+            <button class="button button--primary button--sm product-card__button js-quick-order" type="button" data-product-id="3">В заказ</button>
+            <a class="button button--secondary button--sm" href="product.html?id=3">Характеристики</a>
+          </div>
+        </article>
 
-      <article class="product-card product-card--unavailable">
-        <img
-          class="product-card__image"
-          src="images/smartwatch-640.jpg"
-          srcset="images/smartwatch-320.jpg 320w,
-                  images/smartwatch-480.jpg 480w,
-                  images/smartwatch-640.jpg 640w,
-                  images/smartwatch-960.jpg 960w"
-          sizes="(max-width: 639px) calc(100vw - 32px),
-                 (max-width: 1023px) calc(50vw - 24px),
-                 (max-width: 1279px) calc(33vw - 24px),
-                 280px"
-          alt="Умные часы Pulse"
-          width="640"
-          height="480"
-          loading="lazy"
-        >
-        <h3 class="product-card__title">Умные часы Pulse</h3>
-        <p class="product-card__description">Краткое описание учебного товара.</p>
-        <p class="product-card__price">Цена: 8990 руб.</p>
-        <button class="button button--primary product-card__button" type="button" data-product="Умные часы Pulse" disabled>
-          Нет в наличии
-        </button>
-      </article>
+        <article class="product-card product-card--discount">
+          <div class="product-card__media">
+            <img
+              class="product-card__image"
+              src="images/ssd-980pro-640.jpg"
+              srcset="images/ssd-980pro-320.jpg 320w,
+                      images/ssd-980pro-480.jpg 480w,
+                      images/ssd-980pro-640.jpg 640w,
+                      images/ssd-980pro-960.jpg 960w"
+              sizes="(max-width: 639px) calc(100vw - 32px),
+                     (max-width: 1023px) calc(50vw - 24px),
+                     (max-width: 1279px) calc(33vw - 24px),
+                     280px"
+              alt="SSD-накопитель Samsung 980 PRO 1 ТБ M.2 NVMe"
+              width="640"
+              height="480"
+              loading="lazy"
+            >
+            <span class="product-card__badge">Скидка</span>
+            <button class="fav-btn js-fav-toggle" type="button" data-product-id="4" aria-label="Добавить в избранное">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="product-card__meta">
+            <span class="product-card__category">Память и SSD</span>
+            <span>PCIe 4.0 &bull; ★ 4.9</span>
+          </div>
+          <h3 class="product-card__title">
+            <a class="product-card__title-link" href="product.html?id=4">SSD Samsung 980 PRO 1 ТБ M.2 NVMe PCIe 4.0</a>
+          </h3>
+          <p class="product-card__description">Скорость чтения до 7000 МБ/с, буфер DRAM 1 ГБ LPDDR4, ресурс 600 TBW под ОС и проекты.</p>
+          <div class="product-card__price-row">
+            <p class="product-card__price">11 990 руб.</p>
+            <s class="product-card__old-price">13 690 руб.</s>
+          </div>
+          <div class="product-card__actions">
+            <button class="button button--primary button--sm product-card__button js-quick-order" type="button" data-product-id="4">В заказ</button>
+            <a class="button button--secondary button--sm" href="product.html?id=4">Характеристики</a>
+          </div>
+        </article>
       </div>
     </section>
 
     <section class="section reviews" id="reviews">
-      <h2 class="section__title">Отзывы покупателей</h2>
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">Отзывы клиентов и владельцев сборок</h2>
+          <p class="section__text">Реальные впечатления покупателей о комплектующих и качестве сборки в «CoreMirea».</p>
+        </div>
+      </div>
 
       <div class="reviews__list">
-        <article class="review">
-          <p class="review__text">«Быстро оформил заявку, со мной связались в тот же день.»</p>
-          <p class="review__author">Иван, Москва</p>
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Максим Соколов</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Сборка: Ryzen 7 7800X3D + RTX 4070 SUPER &bull; Заказ #CM-2026-391</p>
+          <p class="review-card__text">
+            «Собрали системник за сутки! Кабели за задней стенкой уложены идеально, прошили свежий BIOS на ASUS TUF B650 и выставили EXPO 6000 CL30. В Cyberpunk 2077 в 2K с трассировкой стабильные 115+ FPS при тихой работе».
+          </p>
         </article>
 
-        <article class="review">
-          <p class="review__text">«Удобный каталог, всё понятно с первого раза.»</p>
-          <p class="review__author">Мария, Казань</p>
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Артём Белов</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: Core i5-14600KF + ROG STRIX B760-F &bull; Самовывоз</p>
+          <p class="review-card__text">
+            «Очень выручил онлайн-конфигуратор на сайте — сразу проверил сокет LGA 1700 и применил студенческий промокод MIREA10. Забрал на Вернадского через полчаса, все коробки в заводских пломбах».
+          </p>
         </article>
 
-        <article class="review">
-          <p class="review__text">«Понравились скидки и аккуратные карточки товаров.»</p>
-          <p class="review__author">Алексей, Тула</p>
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Дарья Кузнецова</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: RTX 5060 Ti 16GB + Samsung 980 PRO 1TB &bull; Доставка</p>
+          <p class="review-card__text">
+            «Искала карту именно на 16 ГБ видеопамяти под 3D-сцены и нейросети. Инженер в чате подробно сравнил модели и подсказал подходящий блок питания. Доставили в день заказа, всё летает!»
+          </p>
         </article>
       </div>
     </section>
-
-    <aside class="aside-info">
-      <h2 class="aside-info__title">Информация для студентов</h2>
-      <p class="aside-info__text">
-        На следующих практических занятиях этот проект будет расширяться:
-        появятся формы, модальное окно, дополнительные страницы, Flex/Grid,
-        БЭМ-структура и адаптивная версия сайта.
-      </p>
-    </aside>
   </main>
 
-  <footer class="site-footer" id="contacts">
-    <p class="site-footer__text">&copy; 2026 Учебный проект. Все права защищены.</p>
-    <p class="site-footer__text">Дисциплина: Фронтенд и бэкенд разработка</p>
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__grid">
+        <div class="site-footer__col site-footer__col--brand">
+          <a class="site-footer__logo" href="index.html">
+            <span>CoreMirea</span>
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <line x1="9" y1="1" x2="9" y2="4"></line>
+                <line x1="15" y1="1" x2="15" y2="4"></line>
+                <line x1="9" y1="20" x2="9" y2="23"></line>
+                <line x1="15" y1="20" x2="15" y2="23"></line>
+                <line x1="20" y1="9" x2="23" y2="9"></line>
+                <line x1="20" y1="14" x2="23" y2="14"></line>
+                <line x1="1" y1="9" x2="4" y2="9"></line>
+                <line x1="1" y1="14" x2="4" y2="14"></line>
+              </svg>
+            </span>
+          </a>
+          <p class="site-footer__slogan">
+            Оригинальные комплектующие, проверка совместимости и профессиональная сборка ПК для игр, учёбы и разработки.
+          </p>
+          <p class="site-footer__copy">&copy; 2026 CoreMirea. Все права защищены.</p>
+        </div>
+
+        <nav class="site-footer__col site-footer__col--nav" aria-label="Навигация в подвале">
+          <h3 class="site-footer__title">Навигация</h3>
+          <ul class="site-footer__list">
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="index.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Главная</span>
+              </a>
+            </li>
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="catalog.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Каталог</span>
+              </a>
+            </li>
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="about.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>О магазине</span>
+              </a>
+            </li>
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="order.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                </svg>
+                <span>Конфигуратор ПК</span>
+              </a>
+            </li>
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="favorites.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span>Избранное</span>
+              </a>
+            </li>
+            <li class="site-footer__item">
+              <a class="site-footer__link" href="account.html">
+                <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Личный кабинет</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="site-footer__col site-footer__col--contacts">
+          <h3 class="site-footer__title">Контактные данные</h3>
+          <ul class="site-footer__list">
+            <li class="site-footer__item">
+              <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>г. Москва, пр-т Вернадского, д. 78</span>
+            </li>
+            <li class="site-footer__item">
+              <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Ежедневно с 10:00 до 22:00</span>
+            </li>
+            <li class="site-footer__item">
+              <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <a class="site-footer__link" href="tel:+74957772480">+7 (495) 777-24-80</a>
+            </li>
+            <li class="site-footer__item">
+              <svg class="site-footer__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <a class="site-footer__link" href="mailto:build@coremirea.ru">build@coremirea.ru</a>
+            </li>
+          </ul>
+
+          <div class="site-footer__socials">
+            <a class="site-footer__social-link" href="contacts.html" aria-label="Telegram-канал CoreMirea" title="Telegram">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </a>
+            <a class="site-footer__social-link" href="contacts.html#map" aria-label="Схема проезда" title="Карта проезда">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                <line x1="8" y1="2" x2="8" y2="18"></line>
+                <line x1="16" y1="6" x2="16" y2="22"></line>
+              </svg>
+            </a>
+            <a class="site-footer__social-link" href="tel:+74957772480" aria-label="Позвонить в сборочный цех" title="Позвонить">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </footer>
-<dialog class="order-dialog" id="order-dialog" aria-labelledby="order-dialog-title">
-  <div class="order-dialog__inner">
-    <button class="order-dialog__close" type="button" id="close-order-dialog-cross" aria-label="Закрыть окно">&times;</button>
-    <h2 class="order-dialog__title" id="order-dialog-title">Оформление заявки</h2>
-    <p class="order-dialog__product" id="dialog-product-name"></p>
 
-    <form class="order-form" id="order-form" action="#" method="post" novalidate>
-      <input id="selected-product" name="selected-product" type="hidden">
+  <!-- Виджет чата СЛЕВА (монтируется на React) -->
+  <div id="react-chat-root"></div>
 
-      <div class="order-form__field">
-        <label class="order-form__label" for="order-name">Имя</label>
-        <input
-          class="order-form__input"
-          id="order-name"
-          name="name"
-          type="text"
-          placeholder="Введите ваше имя"
-          minlength="2"
-          autocomplete="given-name"
-          required
-        >
-      </div>
+  <!-- Стилизованная кнопка «Наверх» СПРАВА (строго без стрелки) -->
+  <button class="scroll-top" type="button" id="scroll-top" hidden aria-label="Прокрутить страницу наверх">
+    <span class="scroll-top__dot" aria-hidden="true"></span>
+    <span>Наверх</span>
+  </button>
 
-      <div class="order-form__field">
-        <label class="order-form__label" for="order-email">E-mail</label>
-        <input
-          class="order-form__input"
-          id="order-email"
-          name="email"
-          type="email"
-          placeholder="example@mail.ru"
-          autocomplete="email"
-          required
-        >
-      </div>
+  <!-- Модальное окно быстрого заказа комплектующих -->
+  <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-dialog-title">
+    <div class="order-dialog__inner">
+      <button class="order-dialog__close" type="button" id="close-order-dialog-cross" aria-label="Закрыть окно">&times;</button>
+      <h2 class="order-dialog__title" id="order-dialog-title">Быстрый заказ комплектующего</h2>
+      <p class="order-dialog__product" id="dialog-product-name">Вы выбрали: GeForce RTX 4070 SUPER</p>
 
-      <div class="order-form__field">
-        <label class="order-form__label" for="order-phone">Телефон</label>
-        <input
-          class="order-form__input"
-          id="order-phone"
-          name="phone"
-          type="tel"
-          inputmode="tel"
-          placeholder="+7 (900) 000-00-00"
-          pattern="^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$"
-          required
-        >
-        <small class="order-form__hint">Формат: +7 (900) 000-00-00</small>
-      </div>
+      <form class="order-form" id="order-form" action="#" method="post" novalidate>
+        <div class="order-form__field">
+          <label class="order-form__label" for="quick-product">
+            Комплектующее <span class="order-form__required" aria-hidden="true">*</span>
+          </label>
+          <select class="order-form__select" id="quick-product" name="product" required>
+            <option value="1">Palit GeForce RTX 4070 SUPER 12GB — 83 490 руб.</option>
+            <option value="2">AMD Ryzen 7 7800X3D OEM (AM5) — 30 750 руб.</option>
+            <option value="3">G.Skill Trident Z5 RGB 32 ГБ DDR5-6000 — 13 490 руб.</option>
+            <option value="4">SSD Samsung 980 PRO 1 ТБ NVMe — 11 990 руб.</option>
+            <option value="5">PNY GeForce RTX 5060 Ti 16GB — 56 990 руб.</option>
+            <option value="6">Intel Core i5-14600KF OEM (LGA 1700) — 21 890 руб.</option>
+            <option value="7">ASUS TUF GAMING B650-PLUS WIFI — 20 490 руб.</option>
+            <option value="8">ASUS ROG STRIX B760-F GAMING WIFI — 23 990 руб.</option>
+            <option value="9">СЖО Corsair iCUE H150i RGB 360 мм — 15 990 руб.</option>
+            <option value="10">БП Corsair RM850e 850W 80+ Gold — 12 990 руб.</option>
+            <option value="11">Корпус Thermaltake View ARGB TG — 9 490 руб.</option>
+          </select>
+        </div>
 
-      <div class="order-form__field">
-        <label class="order-form__label" for="order-date">Дата связи</label>
-        <input
-          class="order-form__input"
-          id="order-date"
-          name="date"
-          type="date"
-        >
-      </div>
+        <div class="order-form__row">
+          <div class="order-form__field">
+            <label class="order-form__label" for="order-qty">Количество, шт.</label>
+            <input class="order-form__input" id="order-qty" name="qty" type="number" min="1" max="10" value="1" required>
+          </div>
+          <div class="order-form__field">
+            <label class="order-form__label" for="order-delivery">Получение</label>
+            <select class="order-form__select" id="order-delivery" name="delivery">
+              <option value="pickup">Самовывоз (Вернадского, 78)</option>
+              <option value="courier">Курьер по Москве</option>
+              <option value="express">Экспресс за 2 часа</option>
+            </select>
+          </div>
+        </div>
 
-      <div class="order-form__field order-form__field--wide">
-        <label class="order-form__label" for="order-topic">Тема заявки</label>
-        <select class="order-form__select" id="order-topic" name="topic" required>
-          <option value="">Выберите тему</option>
-          <option value="product">Заказ товара</option>
-          <option value="consultation">Консультация</option>
-          <option value="delivery">Доставка</option>
-        </select>
-      </div>
+        <div class="order-form__row">
+          <div class="order-form__field">
+            <label class="order-form__label" for="order-name">
+              Ваше имя <span class="order-form__required" aria-hidden="true">*</span>
+            </label>
+            <input class="order-form__input" id="order-name" name="name" type="text" minlength="2" placeholder="Введите имя" required>
+          </div>
+          <div class="order-form__field">
+            <label class="order-form__label" for="order-phone">
+              Телефон <span class="order-form__required" aria-hidden="true">*</span>
+            </label>
+            <input class="order-form__input" id="order-phone" name="phone" type="tel" placeholder="+7 (900) 000-00-00" required>
+          </div>
+        </div>
 
-      <div class="order-form__field order-form__field--wide">
-        <label class="order-form__label" for="order-comment">Комментарий</label>
-        <textarea
-          class="order-form__textarea"
-          id="order-comment"
-          name="comment"
-          rows="4"
-          placeholder="Укажите дополнительную информацию"
-        ></textarea>
-      </div>
+        <div class="order-form__field">
+          <label class="order-form__label" for="order-email">E-mail для резерва</label>
+          <input class="order-form__input" id="order-email" name="email" type="email" placeholder="mail@example.ru">
+        </div>
 
-      <div class="order-form__field order-form__field--checkbox">
-        <label class="order-form__label">
-          <input
-            class="order-form__checkbox"
-            id="order-agreement"
-            name="agreement"
-            type="checkbox"
-            required
-          >
-          Я согласен на обработку данных
-        </label>
-      </div>
+        <div class="order-form__field order-form__field--checkbox">
+          <label class="order-form__label" for="order-agreement">
+            <input id="order-agreement" name="agreement" type="checkbox" required checked>
+            <span>Согласен с условиями гарантии и обработкой персональных данных *</span>
+          </label>
+        </div>
 
-      <div class="order-form__actions">
-        <button class="button button--secondary" type="button" id="close-order-dialog">Закрыть</button>
-        <button class="button button--secondary" type="reset">Очистить</button>
-        <button class="button button--primary" type="submit">Отправить заявку</button>
-      </div>
-    </form>
-  </div>
-</dialog>
-<p class="success-message" id="success-message" hidden>
-  Форма успешно отправлена!
-</p>
-<button
-  class="button button--primary scroll-top"
-  id="scroll-top"
-  type="button"
-  aria-label="Вернуться наверх"
-  hidden
->
-  ↑ Наверх
-</button>
+        <div class="order-form__actions">
+          <button class="button button--primary" type="submit">Подтвердить резерв</button>
+          <button class="button button--secondary" type="reset">Очистить</button>
+          <button class="button button--secondary" type="button" id="close-order-dialog">Закрыть</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
 </body>
 </html>
