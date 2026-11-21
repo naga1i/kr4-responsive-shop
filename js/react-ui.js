@@ -1,8 +1,8 @@
 // ===============================
 // Пользовательский интерфейс на базе библиотеки React 18 (js/react-ui.js)
-// Магазин комплектующих и сборки ПК «CoreMirea»:
-// шапка действий, чат-консультант по сборке ПК (слева), каталог с живым поиском,
-// избранное, личный кабинет и интерактивный конфигуратор сборки ПК с проверкой сокетов.
+// Магазин комплектующих ПК «CoreMirea»:
+// шапка действий, чат-консультант (слева), каталог с живым поиском,
+// избранное, личный кабинет и форма оформления заказа.
 // ===============================
 
 (function () {
@@ -88,7 +88,7 @@
     );
 
   // ===============================
-  // 1. Панель пользователя в шапке (Избранное, Кабинет, Собрать ПК / Быстрый заказ, Тема)
+  // 1. Панель пользователя в шапке
   // ===============================
   function HeaderActionsWidget() {
     const { theme, favorites, profile } = useElectroStore();
@@ -108,7 +108,7 @@
           className: `header-action-link${isFavPage ? ' header-action-link--active' : ''}`,
           href: 'favorites.html',
           'aria-label': `Избранное: позиций ${favorites.length}`,
-          title: 'Избранные комплектующие',
+          title: 'Избранные товары',
         },
         h(HeartIcon),
         h('span', null, 'Избранное'),
@@ -119,7 +119,7 @@
         {
           className: `header-action-link${isAccountPage ? ' header-action-link--active' : ''}`,
           href: 'account.html',
-          title: 'Личный кабинет и мои сборки',
+          title: 'Личный кабинет покупателя',
         },
         h(UserIcon),
         h('span', null, firstName)
@@ -151,29 +151,26 @@
   }
 
   // ===============================
-  // 2. Виджет чат-консультанта по сборке ПК (расположен СЛЕВА внизу)
+  // 2. Виджет онлайн чат-консультанта (расположен СЛЕВА внизу)
   // ===============================
   function getConsultantReply(question) {
     const q = question.toLowerCase();
-    if (q.includes('совмест') || q.includes('сокет') || q.includes('am5') || q.includes('1700')) {
-      return 'Процессор Ryzen 7 7800X3D работает только с платами Socket AM5 (например, ASUS TUF B650-PLUS WIFI) и памятью DDR5. Для Intel Core i5-14600KF нужна плата LGA 1700 (ASUS ROG STRIX B760-F). В нашем конфигураторе (order.html) совместимость проверяется автоматически!';
+    if (q.includes('видеокарт') || q.includes('4070') || q.includes('5060') || q.includes('2k')) {
+      return 'В наличии Palit GeForce RTX 4070 SUPER 12GB (83 490 руб.) для 2K Ultra и PNY GeForce RTX 5060 Ti 16GB (56 990 руб.) с 16 ГБ памяти. Все карты новые, в заводских пломбах.';
     }
-    if (q.includes('видеокарт') || q.includes('4070') || q.includes('5060') || q.includes('2k') || q.includes('fps')) {
-      return 'Под монитор 2K 144–180 Гц оптимальный выбор — GeForce RTX 4070 SUPER 12GB (83 490 руб.). Для Full HD и нейросетей отлично подойдёт RTX 5060 Ti 16GB (56 990 руб.).';
+    if (q.includes('сокет') || q.includes('am5') || q.includes('1700') || q.includes('процессор') || q.includes('плат')) {
+      return 'Под AMD Ryzen 7 7800X3D (Socket AM5) подходят платы на чипсете B650 и память DDR5. Под Intel Core i5-14600KF (Socket LGA 1700) — платы B760. В каталоге можно сразу отфильтровать товары по сокету.';
     }
-    if (q.includes('блок') || q.includes('бп') || q.includes('ватт') || q.includes('12vhpwr')) {
-      return 'Для связки Ryzen 7 7800X3D + RTX 4070 SUPER рекомендуем Corsair RM850e 850W 80+ Gold ATX 3.0 (12 990 руб.) — у него прямой кабель 12VHPWR без переходников и запас мощности под апгрейд.';
+    if (q.includes('скидк') || q.includes('промокод') || q.includes('бонус')) {
+      return 'По промокоду WELCOME5 действует скидка 5% на заказ, а PARTS1500 даёт скидку 1 500 руб. при покупке от 20 000 руб. Также возвращаем 3% бонусами в Личный кабинет.';
     }
-    if (q.includes('студ') || q.includes('скидк') || q.includes('промокод') || q.includes('мирэа')) {
-      return 'По студенческому промокоду MIREA10 действует скидка 10%, а код BUILD1500 даёт скидку 1 500 руб. на сборку ПК! За каждый заказ начисляем 3% бонусами в Личный кабинет.';
-    }
-    if (q.includes('сборк') || q.includes('тест') || q.includes('гарант')) {
-      return 'Собираем ПК за 24 часа с кабель-менеджментом (+3 490 руб.), прошиваем BIOS, включаем EXPO/XMP и проводим 4-часовой стресс-тест OCCT + FurMark. Гарантия на комплектующие — до 7 лет!';
+    if (q.includes('гарант') || q.includes('возврат') || q.includes('обмен')) {
+      return 'На видеокарты, платы, СЖО и SSD действует официальная гарантия до 36 месяцев, на ОЗУ — 60 месяцев, на блоки питания — до 84 месяцев. Возврат возможен в течение 14 дней.';
     }
     if (q.includes('доставк') || q.includes('самовывоз') || q.includes('адрес')) {
-      return 'Самовывоз из сборочного цеха и шоурума на пр-те Вернадского, 78 — бесплатно. Готовые системные блоки доставляем курьером по Москве в защитном транспортировочном коробе.';
+      return 'Самовывоз из пункта выдачи на пр-те Вернадского, д. 78 — бесплатно через 20 минут после заказа. Доставка по Москве от 30 000 руб. — бесплатно.';
     }
-    return 'Инженер сборочного цеха CoreMirea на связи! Могу проверить совместимость ваших комплектующих, рассчитать блок питания или оформить резерв по тел. +7 (495) 777-24-80.';
+    return 'Спасибо за обращение! Консультант магазина CoreMirea ответит в ближайшее время. Также можно позвонить по номеру +7 (495) 777-24-80.';
   }
 
   function ChatConsultantWidget() {
@@ -183,7 +180,7 @@
       {
         id: 1,
         sender: 'bot',
-        text: 'Привет! Я инженер-консультант «CoreMirea» по сборке ПК. Помочь подобрать видеокарту, проверить совместимость сокетов AM5 / LGA 1700 или подсказать промокод?',
+        text: 'Здравствуйте! Я консультант магазина комплектующих «CoreMirea». Подсказать наличие видеокарт, совместимость по сокету или условия доставки?',
       },
     ]);
     const listRef = useRef(null);
@@ -210,14 +207,14 @@
           ...prev,
           { id: Date.now() + 1, sender: 'bot', text: getConsultantReply(trimmed) },
         ]);
-      }, 320);
+      }, 300);
     };
 
     const quickQuestions = [
-      { label: 'Сокеты AM5 / 1700', q: 'Как проверить совместимость процессора и платы AM5 / LGA 1700?' },
-      { label: 'Карта под 2K', q: 'Какую видеокарту выбрать под 2K гейминг?' },
-      { label: 'Расчёт БП', q: 'Какой блок питания нужен под RTX 4070 SUPER?' },
-      { label: 'Скидка студентам', q: 'Какой промокод даёт скидку студентам?' },
+      { label: 'Видеокарты в наличии', q: 'Какие видеокарты сейчас есть в наличии?' },
+      { label: 'Сокеты AM5 / 1700', q: 'Какие платы подходят под сокет AM5 и LGA 1700?' },
+      { label: 'Доставка и самовывоз', q: 'Какие условия доставки и самовывоза?' },
+      { label: 'Промокоды', q: 'Какие промокоды и скидки действуют?' },
     ];
 
     return h(
@@ -229,7 +226,7 @@
           className: 'chat-widget__window',
           id: 'chat-window',
           role: 'dialog',
-          'aria-label': 'Онлайн чат с инженером по сборке ПК',
+          'aria-label': 'Онлайн чат-консультант',
           hidden: !isOpen,
         },
         h(
@@ -238,8 +235,8 @@
           h(
             'div',
             null,
-            h('p', { className: 'chat-widget__title' }, 'Инженер сборки CoreMirea'),
-            h('span', { className: 'chat-widget__status' }, '● В сети — подбор железа онлайн')
+            h('p', { className: 'chat-widget__title' }, 'Консультант CoreMirea'),
+            h('span', { className: 'chat-widget__status' }, '● Онлайн — отвечаем сразу')
           ),
           h(
             'button',
@@ -291,7 +288,7 @@
             type: 'text',
             value: input,
             onChange: (e) => setInput(e.target.value),
-            placeholder: 'Спросите про сокет, FPS, БП...',
+            placeholder: 'Напишите ваш вопрос...',
             autoComplete: 'off',
           }),
           h('button', { className: 'button button--primary chat-widget__send', type: 'submit' }, 'Отправить')
@@ -307,13 +304,13 @@
           onClick: () => setIsOpen((v) => !v),
         },
         h(ChatIcon),
-        h('span', null, 'Чат со сборщиком')
+        h('span', null, 'Чат-консультант')
       )
     );
   }
 
   // ===============================
-  // 3. Карточка комплектующего (общий React-компонент)
+  // 3. Карточка товара (общий React-компонент)
   // ===============================
   function ProductCard({ product, isFav, onToggleFav }) {
     const imgProps = product.responsiveBase
@@ -398,7 +395,7 @@
                   if (window.openQuickOrderModal) window.openQuickOrderModal(product.id);
                 },
               },
-              'В заказ'
+              'Купить'
             )
           : h(
               'button',
@@ -415,14 +412,14 @@
             className: 'button button--secondary button--sm',
             href: `product.html?id=${product.id}`,
           },
-          'Характеристики'
+          'Подробнее'
         )
       )
     );
   }
 
   // ===============================
-  // 4. Каталог комплектующих ПК с живым поиском, сокетами и фильтрацией (catalog.html)
+  // 4. Каталог комплектующих с живым поиском и фильтрами (catalog.html)
   // ===============================
   function CatalogApp() {
     const { favorites } = useElectroStore();
@@ -484,12 +481,12 @@
     }, [category, socketFilter, onlyAvailable, selectedBadges, priceFrom, priceTo, search, sortBy]);
 
     const categories = [
-      { value: 'all', label: 'Все комплектующие (12)' },
-      { value: 'gpu', label: 'Видеокарты (GPU)' },
-      { value: 'cpu', label: 'Процессоры (CPU)' },
+      { value: 'all', label: 'Все товары (12)' },
+      { value: 'gpu', label: 'Видеокарты' },
+      { value: 'cpu', label: 'Процессоры' },
       { value: 'mobo', label: 'Материнские платы' },
-      { value: 'memory', label: 'ОЗУ DDR5 и NVMe SSD' },
-      { value: 'cooling', label: 'СЖО, блоки питания, корпуса' },
+      { value: 'memory', label: 'ОЗУ DDR5 и SSD' },
+      { value: 'cooling', label: 'Охлаждение, БП, корпуса' },
     ];
 
     return h(
@@ -497,8 +494,8 @@
       { className: 'catalog-layout' },
       h(
         'aside',
-        { className: 'catalog-filters', 'aria-label': 'Фильтры комплектующих ПК' },
-        h('h2', { className: 'catalog-filters__title' }, 'Подбор железа'),
+        { className: 'catalog-filters', 'aria-label': 'Фильтры каталога' },
+        h('h2', { className: 'catalog-filters__title' }, 'Фильтры'),
         h(
           'form',
           { className: 'filters-form', onSubmit: (e) => e.preventDefault() },
@@ -524,11 +521,11 @@
           h(
             'fieldset',
             { className: 'filters-form__fieldset' },
-            h('legend', { className: 'filters-form__legend' }, 'Платформа / Сокет (CPU + Платы)'),
+            h('legend', { className: 'filters-form__legend' }, 'Сокет (CPU / Платы)'),
             [
               { value: 'all', label: 'Любой сокет' },
-              { value: 'AM5', label: 'Socket AM5 (AMD Ryzen)' },
-              { value: 'LGA 1700', label: 'Socket LGA 1700 (Intel)' },
+              { value: 'AM5', label: 'Socket AM5' },
+              { value: 'LGA 1700', label: 'Socket LGA 1700' },
             ].map((s) =>
               h(
                 'label',
@@ -547,7 +544,7 @@
           h(
             'fieldset',
             { className: 'filters-form__fieldset' },
-            h('legend', { className: 'filters-form__legend' }, 'Статус и наличие'),
+            h('legend', { className: 'filters-form__legend' }, 'Наличие и акции'),
             h(
               'label',
               { className: 'filters-form__label' },
@@ -556,7 +553,7 @@
                 checked: onlyAvailable,
                 onChange: (e) => setOnlyAvailable(e.target.checked),
               }),
-              h('span', null, 'Только в наличии на складе')
+              h('span', null, 'Только в наличии')
             ),
             ['Хит', 'Скидка', 'Новинка'].map((b) =>
               h(
@@ -625,11 +622,11 @@
         h(
           'div',
           { className: 'catalog-products__header' },
-          h('h2', { className: 'catalog-products__title' }, 'Комплектующие для сборки ПК'),
+          h('h2', { className: 'catalog-products__title' }, 'Комплектующие для ПК'),
           h(
             'p',
             { className: 'catalog-products__count', id: 'catalog-count' },
-            `Найдено комплектующих: ${filteredProducts.length} из ${store.PRODUCTS.length}`
+            `Найдено товаров: ${filteredProducts.length} из ${store.PRODUCTS.length}`
           )
         ),
         h(
@@ -644,7 +641,7 @@
               className: 'order-form__input',
               id: 'catalog-search',
               type: 'search',
-              placeholder: 'Поиск по модели, чипу, сокету или коду (RTX 4070, 7800X3D, DDR5, AM5)...',
+              placeholder: 'Поиск по модели, бренду или артикулу (RTX 4070, 7800X3D, DDR5)...',
               value: search,
               onChange: (e) => setSearch(e.target.value),
               autoComplete: 'off',
@@ -665,7 +662,7 @@
               h('option', { value: 'default' }, 'Сортировка: популярные'),
               h('option', { value: 'price-asc' }, 'По цене: сначала дешевле'),
               h('option', { value: 'price-desc' }, 'По цене: сначала дороже'),
-              h('option', { value: 'rating-desc' }, 'По оценке покупателей'),
+              h('option', { value: 'rating-desc' }, 'По рейтингу'),
               h('option', { value: 'title-asc' }, 'По названию: А — Я')
             )
           )
@@ -674,7 +671,7 @@
           ? h(
               'div',
               { className: 'alert-box alert-box--warning' },
-              'По выбранным параметрам комплектующие не найдены. Попробуйте изменить запрос или ',
+              'По выбранным параметрам товары не найдены. Попробуйте изменить запрос или ',
               h(
                 'button',
                 {
@@ -717,16 +714,16 @@
       return h(
         'div',
         { className: 'empty-state' },
-        h('h2', { className: 'section__title' }, 'В избранном пока нет комплектующих'),
+        h('h2', { className: 'section__title' }, 'Список избранного пуст'),
         h(
           'p',
           { className: 'section__text', style: { marginBottom: '20px' } },
-          'Отмечайте сердечком видеокарты, процессоры и память в каталоге, чтобы отложить детали под будущую сборку ПК.'
+          'Добавляйте видеокарты, процессоры и другие комплектующие в избранное, чтобы не потерять нужные позиции.'
         ),
         h(
           'div',
           { style: { display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '12px' } },
-          h('a', { className: 'button button--primary', href: 'catalog.html' }, 'Перейти в каталог железа'),
+          h('a', { className: 'button button--primary', href: 'catalog.html' }, 'Перейти в каталог'),
           h(
             'button',
             {
@@ -738,7 +735,7 @@
                 store.toggleFavorite(3);
               },
             },
-            'Добавить связку RTX 4070S + 7800X3D + DDR5'
+            'Добавить популярные товары'
           )
         )
       );
@@ -763,17 +760,17 @@
         h(
           'div',
           null,
-          h('strong', { style: { fontSize: '18px' } }, `Отложено комплектующих: ${favProducts.length}`),
+          h('strong', { style: { fontSize: '17px' } }, `Сохранено товаров: ${favProducts.length}`),
           h(
             'p',
             { className: 'section__text', style: { fontSize: '14px' } },
-            `Суммарная стоимость выбранного железа: ${store.formatPrice(totalSum)}`
+            `Общая стоимость: ${store.formatPrice(totalSum)}`
           )
         ),
         h(
           'div',
           { style: { display: 'flex', flexWrap: 'wrap', gap: '10px' } },
-          h('a', { className: 'button button--primary button--sm', href: 'order.html' }, 'Открыть конфигуратор ПК'),
+          h('a', { className: 'button button--primary button--sm', href: 'order.html' }, 'Перейти к заказу'),
           h(
             'button',
             {
@@ -781,7 +778,7 @@
               type: 'button',
               onClick: () => store.clearFavorites(),
             },
-            'Очистить избранное'
+            'Очистить список'
           )
         )
       ),
@@ -848,12 +845,8 @@
             h(
               'div',
               null,
-              h('h2', { style: { margin: '0 0 4px', fontSize: '20px' } }, profile.name),
-              h(
-                'p',
-                { className: 'text-muted', style: { margin: 0, fontSize: '14px' } },
-                `${profile.email} • Группа: ${profile.studentGroup || 'РТУ МИРЭА'}`
-              ),
+              h('h2', { style: { margin: '0 0 4px', fontSize: '19px' } }, profile.name),
+              h('p', { className: 'text-muted', style: { margin: 0, fontSize: '14px' } }, profile.email),
               h(
                 'p',
                 { className: 'text-muted', style: { margin: '2px 0 0', fontSize: '14px' } },
@@ -863,10 +856,10 @@
           ),
           h(
             'div',
-            { style: { display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' } },
-            h('span', { className: 'product__chip' }, `Заказов и сборок: ${orders.length}`),
+            { style: { display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' } },
+            h('span', { className: 'product__chip' }, `Заказов: ${orders.length}`),
             h('span', { className: 'product__chip' }, `В избранном: ${favorites.length}`),
-            h('span', { className: 'product__chip' }, 'Тариф: Студент МИРЭА (−10%)')
+            h('span', { className: 'product__chip' }, 'Постоянный покупатель')
           )
         ),
         h(
@@ -881,12 +874,12 @@
           h(
             'p',
             { className: 'text-muted', style: { margin: '0 0 14px', fontSize: '14px' } },
-            '1 бонус = 1 рубль. Начисляем 3% бонусами за любые комплектующие и кастомные сборки ПК.'
+            '1 бонус = 1 рубль. За каждый заказ комплектующих начисляется 3% бонусами.'
           ),
           h(
             'div',
             { style: { display: 'flex', flexWrap: 'wrap', gap: '10px' } },
-            h('a', { className: 'button button--primary button--sm', href: 'order.html' }, 'Собрать ПК в конфигураторе'),
+            h('a', { className: 'button button--primary button--sm', href: 'catalog.html' }, 'В каталог товаров'),
             h('a', { className: 'button button--secondary button--sm', href: 'favorites.html' }, 'Моё избранное')
           )
         )
@@ -895,9 +888,9 @@
         'div',
         { className: 'account-tabs', role: 'tablist', 'aria-label': 'Разделы личного кабинета' },
         [
-          { id: 'orders', label: `Мои заказы и сборки (${orders.length})` },
-          { id: 'profile', label: 'Профиль и доставка' },
-          { id: 'promos', label: 'Промокоды на железо' },
+          { id: 'orders', label: `Мои заказы (${orders.length})` },
+          { id: 'profile', label: 'Профиль и адрес' },
+          { id: 'promos', label: 'Промокоды' },
         ].map((tab) =>
           h(
             'button',
@@ -927,7 +920,7 @@
                   h(
                     'div',
                     null,
-                    h('strong', { style: { fontSize: '17px' } }, `Заказ #${ord.orderNumber}`),
+                    h('strong', { style: { fontSize: '16px' } }, `Заказ #${ord.orderNumber}`),
                     h(
                       'span',
                       { className: 'text-muted', style: { marginLeft: '10px', fontSize: '13px' } },
@@ -945,7 +938,7 @@
                   ? h(
                       'p',
                       { className: 'text-muted', style: { margin: '0 0 6px', fontSize: '13px' } },
-                      `Услуги цеха: ${ord.addons.join(', ')}`
+                      `Доп. опции: ${ord.addons.join(', ')}`
                     )
                   : null,
                 h(
@@ -966,13 +959,19 @@
                   },
                   h(
                     'strong',
-                    { style: { fontSize: '18px', color: 'var(--color-primary)' } },
+                    { style: { fontSize: '17px', fontVariantNumeric: 'tabular-nums' } },
                     `Сумма: ${store.formatPrice(ord.total)}`
                   ),
                   h(
-                    'a',
-                    { className: 'button button--secondary button--sm', href: 'order.html' },
-                    'Открыть в конфигураторе'
+                    'button',
+                    {
+                      className: 'button button--secondary button--sm',
+                      type: 'button',
+                      onClick: () => {
+                        if (window.openQuickOrderModal) window.openQuickOrderModal(ord.productName);
+                      },
+                    },
+                    'Повторить заказ'
                   )
                 )
               )
@@ -987,7 +986,7 @@
               ? h(
                   'div',
                   { className: 'alert-box alert-box--success', role: 'status' },
-                  'Профиль покупателя сохранён и синхронизирован с шапкой и формами заказа!'
+                  'Данные профиля успешно сохранены!'
                 )
               : null,
             h(
@@ -1013,13 +1012,14 @@
                 h(
                   'div',
                   { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'acc-group' }, 'Учебная группа / статус'),
+                  h('label', { className: 'order-form__label', htmlFor: 'acc-phone' }, 'Телефон'),
                   h('input', {
                     className: 'order-form__input',
-                    id: 'acc-group',
-                    type: 'text',
-                    value: formState.studentGroup || '',
-                    onChange: (e) => setFormState({ ...formState, studentGroup: e.target.value }),
+                    id: 'acc-phone',
+                    type: 'tel',
+                    required: true,
+                    value: formState.phone || '',
+                    onChange: (e) => setFormState({ ...formState, phone: e.target.value }),
                   })
                 )
               ),
@@ -1029,20 +1029,7 @@
                 h(
                   'div',
                   { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'acc-phone' }, 'Телефон для SMS'),
-                  h('input', {
-                    className: 'order-form__input',
-                    id: 'acc-phone',
-                    type: 'tel',
-                    required: true,
-                    value: formState.phone || '',
-                    onChange: (e) => setFormState({ ...formState, phone: e.target.value }),
-                  })
-                ),
-                h(
-                  'div',
-                  { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'acc-email' }, 'E-mail для чека и гарантии'),
+                  h('label', { className: 'order-form__label', htmlFor: 'acc-email' }, 'E-mail'),
                   h('input', {
                     className: 'order-form__input',
                     id: 'acc-email',
@@ -1051,19 +1038,19 @@
                     value: formState.email || '',
                     onChange: (e) => setFormState({ ...formState, email: e.target.value }),
                   })
+                ),
+                h(
+                  'div',
+                  { className: 'order-form__field' },
+                  h('label', { className: 'order-form__label', htmlFor: 'acc-addr' }, 'Адрес доставки'),
+                  h('input', {
+                    className: 'order-form__input',
+                    id: 'acc-addr',
+                    type: 'text',
+                    value: formState.address || '',
+                    onChange: (e) => setFormState({ ...formState, address: e.target.value }),
+                  })
                 )
-              ),
-              h(
-                'div',
-                { className: 'order-form__field' },
-                h('label', { className: 'order-form__label', htmlFor: 'acc-addr' }, 'Адрес доставки готового ПК'),
-                h('input', {
-                  className: 'order-form__input',
-                  id: 'acc-addr',
-                  type: 'text',
-                  value: formState.address || '',
-                  onChange: (e) => setFormState({ ...formState, address: e.target.value }),
-                })
               ),
               h(
                 'div',
@@ -1104,34 +1091,21 @@
   }
 
   // ===============================
-  // 7. Интерактивный Конфигуратор сборки ПК и заказа комплектующих (order.html)
+  // 7. Оформление заказа комплектующих (order.html)
   // ===============================
-  function OrderConfiguratorApp() {
+  function OrderFormApp() {
     const { profile } = useElectroStore();
     const urlParams = new URLSearchParams(window.location.search);
     const paramId = Number(urlParams.get('id'));
     const availableProducts = store.PRODUCTS.filter((p) => p.available);
 
-    const [mode, setMode] = useState(paramId ? 'single' : 'builder');
-    // Состояние для одиночного товара
-    const [singleId, setSingleId] = useState(
+    const [productId, setProductId] = useState(
       availableProducts.some((p) => p.id === paramId) ? paramId : 1
     );
     const [qty, setQty] = useState(1);
-
-    // Состояние для полной сборки ПК
-    const [cpuId, setCpuId] = useState(2); // Ryzen 7 7800X3D (AM5)
-    const [moboId, setMoboId] = useState(7); // ASUS TUF B650 (AM5)
-    const [gpuId, setGpuId] = useState(1); // RTX 4070 SUPER
-    const [ramId, setRamId] = useState(3); // 32GB DDR5-6000
-    const [ssdId, setSsdId] = useState(4); // Samsung 980 PRO 1TB
-    const [coolerId, setCoolerId] = useState(9); // Corsair H150i 360mm
-    const [psuId, setPsuId] = useState(10); // Corsair RM850e 850W
-    const [caseId, setCaseId] = useState(11); // Thermaltake ARGB TG
-
     const [delivery, setDelivery] = useState('pickup');
-    const [selectedAddons, setSelectedAddons] = useState(paramId ? [] : ['assembly', 'bios_os']);
-    const [promoInput, setPromoInput] = useState('MIREA10');
+    const [selectedAddons, setSelectedAddons] = useState([]);
+    const [promoInput, setPromoInput] = useState('');
     const [name, setName] = useState(profile.name || '');
     const [phone, setPhone] = useState(profile.phone || '');
     const [email, setEmail] = useState(profile.email || '');
@@ -1139,14 +1113,7 @@
     const [agreed, setAgreed] = useState(true);
     const [submittedOrder, setSubmittedOrder] = useState(null);
 
-    const cpu = store.getProductById(cpuId);
-    const mobo = store.getProductById(moboId);
-    const socketCompatible = cpu.socket === mobo.socket;
-
-    const fixCompatibleMobo = () => {
-      const match = store.PRODUCTS.find((p) => p.category === 'mobo' && p.socket === cpu.socket);
-      if (match) setMoboId(match.id);
-    };
+    const product = store.getProductById(productId);
 
     const toggleAddon = (id) => {
       setSelectedAddons((prev) =>
@@ -1155,21 +1122,7 @@
     };
 
     const calc = useMemo(() => {
-      const buildParts = [cpuId, moboId, gpuId, ramId, ssdId, coolerId, psuId, caseId].map((id) =>
-        store.getProductById(id)
-      );
-      const singleProd = store.getProductById(singleId);
-
-      const baseTotal =
-        mode === 'builder'
-          ? buildParts.reduce((s, p) => s + p.price, 0)
-          : singleProd.price * qty;
-
-      const estimatedTdp =
-        mode === 'builder'
-          ? buildParts.reduce((s, p) => s + (p.tdp || 0), 0) + 45
-          : (singleProd.tdp || 0) * qty;
-
+      const baseTotal = product.price * qty;
       const addonObjs = store.ADDONS.filter((a) => selectedAddons.includes(a.id));
       const addonsSum = addonObjs.reduce((acc, a) => acc + a.price, 0);
       const deliveryPrice =
@@ -1190,49 +1143,24 @@
       const finalTotal = Math.max(0, baseTotal + addonsSum + deliveryPrice - discount);
       const bonusCashback = Math.max(100, Math.round(finalTotal * 0.03));
 
-      return {
-        buildParts,
-        singleProd,
-        baseTotal,
-        estimatedTdp,
-        addonObjs,
-        addonsSum,
-        deliveryPrice,
-        promoObj,
-        discount,
-        finalTotal,
-        bonusCashback,
-      };
-    }, [mode, cpuId, moboId, gpuId, ramId, ssdId, coolerId, psuId, caseId, singleId, qty, selectedAddons, delivery, promoInput]);
+      return { baseTotal, addonObjs, addonsSum, deliveryPrice, promoObj, discount, finalTotal, bonusCashback };
+    }, [product, qty, selectedAddons, delivery, promoInput]);
 
     const deliveryLabels = {
-      pickup: 'Самовывоз из сборочного шоурума (пр-т Вернадского, 78)',
-      courier: 'Бережная доставка по Москве',
-      express: 'Экспресс-доставка в день готовности (+890 руб.)',
+      pickup: 'Самовывоз из пункта выдачи (пр-т Вернадского, 78)',
+      courier: 'Курьерская доставка по Москве',
+      express: 'Экспресс-доставка за 2 часа',
     };
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      if (mode === 'builder' && !socketCompatible) {
-        fixCompatibleMobo();
-        return;
-      }
       if (!e.currentTarget.checkValidity()) {
         e.currentTarget.reportValidity();
         return;
       }
 
-      const titleSummary =
-        mode === 'builder'
-          ? `Сборка ПК (${cpu.socket}): ${cpu.name.replace('Процессор ', '')} + ${store
-              .getProductById(gpuId)
-              .name.replace('Видеокарта ', '')}`
-          : qty > 1
-            ? `${calc.singleProd.name} × ${qty} шт.`
-            : calc.singleProd.name;
-
       const result = store.addOrder({
-        productName: titleSummary,
+        productName: qty > 1 ? `${product.name} × ${qty} шт.` : product.name,
         addons: calc.addonObjs.map((a) => a.title),
         delivery: deliveryLabels[delivery],
         total: calc.finalTotal,
@@ -1253,39 +1181,12 @@
               style: { width: 'min(100% - 32px, 1180px)', margin: '0 auto 24px' },
               role: 'status',
             },
-            h('strong', null, `Заказ #${submittedOrder.order.orderNumber} передан в сборочный цех! `),
+            h('strong', null, `Заказ #${submittedOrder.order.orderNumber} успешно оформлен! `),
             `В `,
             h('a', { href: 'account.html' }, 'Личном кабинете'),
-            ` начислено +${submittedOrder.bonusEarned} бонусов и добавлен статус сборки.`
+            ` начислено +${submittedOrder.bonusEarned} бонусов и сохранена история заказа.`
           )
         : null,
-      h(
-        'div',
-        {
-          className: 'account-tabs',
-          style: { width: 'min(100% - 32px, 1180px)', margin: '0 auto 20px' },
-          role: 'tablist',
-          'aria-label': 'Режим оформления заказа',
-        },
-        h(
-          'button',
-          {
-            type: 'button',
-            className: `account-tab${mode === 'builder' ? ' account-tab--active' : ''}`,
-            onClick: () => setMode('builder'),
-          },
-          'Конфигуратор полной сборки ПК'
-        ),
-        h(
-          'button',
-          {
-            type: 'button',
-            className: `account-tab${mode === 'single' ? ' account-tab--active' : ''}`,
-            onClick: () => setMode('single'),
-          },
-          'Заказ отдельного комплектующего'
-        )
-      ),
       h(
         'form',
         { onSubmit: handleSubmit },
@@ -1295,225 +1196,76 @@
           h(
             'div',
             { className: 'order-form' },
-            mode === 'builder'
-              ? h(
-                  'fieldset',
-                  { className: 'order-form__fieldset' },
-                  h('legend', { className: 'order-form__legend' }, '1. Конфигурация системного блока (проверка совместимости)'),
-                  socketCompatible
-                    ? h(
-                        'div',
-                        { className: 'alert-box alert-box--success', style: { margin: 0 } },
-                        `✓ Совместимость проверена: платформа ${cpu.socket} + DDR5 • Расчётное энергопотребление ~${calc.estimatedTdp} Вт (запас БП 850 Вт оптимален)`
-                      )
-                    : h(
-                        'div',
-                        { className: 'alert-box alert-box--warning' },
-                        `⚠ Внимание: сокет процессора (${cpu.socket}) не совпадает с сокетом материнской платы (${mobo.socket})! `,
-                        h(
-                          'button',
-                          {
-                            className: 'button button--primary button--sm',
-                            type: 'button',
-                            style: { marginLeft: '8px' },
-                            onClick: fixCompatibleMobo,
-                          },
-                          `Подобрать плату под ${cpu.socket}`
-                        )
-                      ),
-                  h(
-                    'div',
-                    { className: 'order-form__row' },
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-cpu' }, 'Процессор (CPU)'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'b-cpu',
-                          value: cpuId,
-                          onChange: (e) => setCpuId(Number(e.target.value)),
-                        },
-                        store.PRODUCTS.filter((p) => p.category === 'cpu').map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                      )
-                    ),
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-mobo' }, 'Материнская плата'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'b-mobo',
-                          value: moboId,
-                          onChange: (e) => setMoboId(Number(e.target.value)),
-                        },
-                        store.PRODUCTS.filter((p) => p.category === 'mobo').map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                      )
-                    )
-                  ),
-                  h(
-                    'div',
-                    { className: 'order-form__field' },
-                    h('label', { className: 'order-form__label', htmlFor: 'b-gpu' }, 'Видеокарта (GPU)'),
-                    h(
-                      'select',
-                      {
-                        className: 'order-form__select',
-                        id: 'b-gpu',
-                        value: gpuId,
-                        onChange: (e) => setGpuId(Number(e.target.value)),
-                      },
-                      availableProducts
-                        .filter((p) => p.category === 'gpu')
-                        .map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                    )
-                  ),
-                  h(
-                    'div',
-                    { className: 'order-form__row' },
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-ram' }, 'Оперативная память'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'b-ram',
-                          value: ramId,
-                          onChange: (e) => setRamId(Number(e.target.value)),
-                        },
-                        store.PRODUCTS.filter((p) => p.id === 3).map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                      )
-                    ),
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-ssd' }, 'NVMe накопитель'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'b-ssd',
-                          value: ssdId,
-                          onChange: (e) => setSsdId(Number(e.target.value)),
-                        },
-                        store.PRODUCTS.filter((p) => p.id === 4).map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                      )
-                    )
-                  ),
-                  h(
-                    'div',
-                    { className: 'order-form__row' },
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-cool' }, 'Охлаждение процессора'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'b-cool',
-                          value: coolerId,
-                          onChange: (e) => setCoolerId(Number(e.target.value)),
-                        },
-                        store.PRODUCTS.filter((p) => p.id === 9).map((p) =>
-                          h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)}`)
-                        )
-                      )
-                    ),
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'b-case' }, 'Блок питания и корпус'),
-                      h(
-                        'input',
-                        {
-                          className: 'order-form__input',
-                          id: 'b-case',
-                          type: 'text',
-                          readOnly: true,
-                          value: 'Corsair RM850e Gold + Thermaltake ARGB TG',
-                        }
-                      )
-                    )
-                  )
-                )
-              : h(
-                  'fieldset',
-                  { className: 'order-form__fieldset' },
-                  h('legend', { className: 'order-form__legend' }, '1. Выбор комплектующего и количества'),
-                  h(
-                    'div',
-                    { className: 'order-form__field' },
-                    h('label', { className: 'order-form__label', htmlFor: 'cfg-product' }, 'Комплектующее из каталога *'),
-                    h(
-                      'select',
-                      {
-                        className: 'order-form__select',
-                        id: 'cfg-product',
-                        value: singleId,
-                        onChange: (e) => setSingleId(Number(e.target.value)),
-                      },
-                      availableProducts.map((p) =>
-                        h('option', { key: p.id, value: p.id }, `${p.name} — ${store.formatPrice(p.price)} (${p.sku})`)
-                      )
-                    )
-                  ),
-                  h(
-                    'div',
-                    { className: 'order-form__row' },
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'cfg-qty' }, 'Количество, шт.'),
-                      h('input', {
-                        className: 'order-form__input',
-                        id: 'cfg-qty',
-                        type: 'number',
-                        min: 1,
-                        max: 10,
-                        value: qty,
-                        onChange: (e) => setQty(Math.max(1, Math.min(10, Number(e.target.value) || 1))),
-                      })
-                    ),
-                    h(
-                      'div',
-                      { className: 'order-form__field' },
-                      h('label', { className: 'order-form__label', htmlFor: 'cfg-delivery' }, 'Способ получения'),
-                      h(
-                        'select',
-                        {
-                          className: 'order-form__select',
-                          id: 'cfg-delivery',
-                          value: delivery,
-                          onChange: (e) => setDelivery(e.target.value),
-                        },
-                        h('option', { value: 'pickup' }, 'Самовывоз из шоурума (0 руб.)'),
-                        h('option', { value: 'courier' }, 'Доставка по Москве (от 30 000 ₽ — 0 руб.)'),
-                        h('option', { value: 'express' }, 'Экспресс-курьер (+890 руб.)')
-                      )
-                    )
-                  )
-                ),
             h(
               'fieldset',
               { className: 'order-form__fieldset' },
-              h('legend', { className: 'order-form__legend' }, '2. Услуги сборочного цеха CoreMirea'),
+              h('legend', { className: 'order-form__legend' }, '1. Выбор товара и способа получения'),
+              h(
+                'div',
+                { className: 'order-form__field' },
+                h(
+                  'label',
+                  { className: 'order-form__label', htmlFor: 'cfg-product' },
+                  'Комплектующее из каталога ',
+                  h('span', { className: 'order-form__required', 'aria-hidden': 'true' }, '*')
+                ),
+                h(
+                  'select',
+                  {
+                    className: 'order-form__select',
+                    id: 'cfg-product',
+                    value: productId,
+                    onChange: (e) => setProductId(Number(e.target.value)),
+                  },
+                  availableProducts.map((p) =>
+                    h(
+                      'option',
+                      { key: p.id, value: p.id },
+                      `${p.name} — ${store.formatPrice(p.price)} (${p.sku})`
+                    )
+                  )
+                )
+              ),
+              h(
+                'div',
+                { className: 'order-form__row' },
+                h(
+                  'div',
+                  { className: 'order-form__field' },
+                  h('label', { className: 'order-form__label', htmlFor: 'cfg-qty' }, 'Количество, шт.'),
+                  h('input', {
+                    className: 'order-form__input',
+                    id: 'cfg-qty',
+                    type: 'number',
+                    min: 1,
+                    max: 10,
+                    value: qty,
+                    onChange: (e) => setQty(Math.max(1, Math.min(10, Number(e.target.value) || 1))),
+                  })
+                ),
+                h(
+                  'div',
+                  { className: 'order-form__field' },
+                  h('label', { className: 'order-form__label', htmlFor: 'cfg-delivery' }, 'Способ получения'),
+                  h(
+                    'select',
+                    {
+                      className: 'order-form__select',
+                      id: 'cfg-delivery',
+                      value: delivery,
+                      onChange: (e) => setDelivery(e.target.value),
+                    },
+                    h('option', { value: 'pickup' }, 'Самовывоз (0 руб.)'),
+                    h('option', { value: 'courier' }, 'Курьер по Москве (от 30 000 ₽ — 0 руб.)'),
+                    h('option', { value: 'express' }, 'Экспресс за 2 часа (+890 руб.)')
+                  )
+                )
+              )
+            ),
+            h(
+              'fieldset',
+              { className: 'order-form__fieldset' },
+              h('legend', { className: 'order-form__legend' }, '2. Дополнительные опции'),
               h(
                 'div',
                 { className: 'addons-list' },
@@ -1556,7 +1308,7 @@
                     className: 'order-form__input',
                     id: 'cfg-promo',
                     type: 'text',
-                    placeholder: 'MIREA10 или BUILD1500',
+                    placeholder: 'WELCOME5 или PARTS1500',
                     value: promoInput,
                     onChange: (e) => setPromoInput(e.target.value),
                   }),
@@ -1564,8 +1316,8 @@
                     'small',
                     { className: 'order-form__hint' },
                     calc.promoObj
-                      ? `Активен код ${calc.promoObj.code}: экономия ${store.formatPrice(calc.discount)}`
-                      : 'Доступные коды: MIREA10 (−10%), BUILD1500 (−1 500 ₽)'
+                      ? `Применён код ${calc.promoObj.code}: −${store.formatPrice(calc.discount)}`
+                      : 'Доступные коды в Личном кабинете: WELCOME5, PARTS1500'
                   )
                 ),
                 h(
@@ -1603,7 +1355,7 @@
                 h(
                   'div',
                   { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'cfg-email' }, 'E-mail для гарантийного талона *'),
+                  h('label', { className: 'order-form__label', htmlFor: 'cfg-email' }, 'E-mail для электронного чека *'),
                   h('input', {
                     className: 'order-form__input',
                     id: 'cfg-email',
@@ -1617,12 +1369,12 @@
               h(
                 'div',
                 { className: 'order-form__field' },
-                h('label', { className: 'order-form__label', htmlFor: 'cfg-comment' }, 'Пожелания к сборке / цвету подсветки ARGB'),
+                h('label', { className: 'order-form__label', htmlFor: 'cfg-comment' }, 'Комментарий к заказу'),
                 h('textarea', {
                   className: 'order-form__textarea',
                   id: 'cfg-comment',
                   rows: 3,
-                  placeholder: 'Например: выставить профиль подсветки в синий цвет, разбить SSD на два раздела...',
+                  placeholder: 'Удобное время доставки или пожелания по выдаче...',
                   value: comment,
                   onChange: (e) => setComment(e.target.value),
                 })
@@ -1648,34 +1400,38 @@
           h(
             'aside',
             { className: 'order-summary' },
+            h('h2', { className: 'order-summary__title' }, 'Ваш заказ'),
             h(
-              'h2',
-              { className: 'order-summary__title' },
-              mode === 'builder' ? 'Сводка вашей сборки ПК' : 'Ваш заказ'
+              'div',
+              { style: { display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '14px' } },
+              h('img', {
+                src: product.image,
+                alt: product.name,
+                width: 80,
+                height: 60,
+                style: { borderRadius: '6px', objectFit: 'cover', flexShrink: 0 },
+              }),
+              h(
+                'div',
+                null,
+                h('strong', { style: { display: 'block', fontSize: '14px' } }, product.name),
+                h('span', { className: 'text-muted', style: { fontSize: '12px' } }, `Артикул ${product.sku} • Гарантия ${product.warranty}`)
+              )
             ),
             h(
               'ul',
               { className: 'order-summary__list' },
-              mode === 'builder'
-                ? calc.buildParts.map((part) =>
-                    h(
-                      'li',
-                      { key: part.id, className: 'order-summary__item' },
-                      h('span', null, part.categoryTitle + ':'),
-                      h('strong', { style: { textAlign: 'right' } }, store.formatPrice(part.price))
-                    )
-                  )
-                : h(
-                    'li',
-                    { className: 'order-summary__item' },
-                    h('span', null, `${calc.singleProd.name} (${qty} шт.):`),
-                    h('strong', null, store.formatPrice(calc.baseTotal))
-                  ),
               h(
                 'li',
                 { className: 'order-summary__item' },
-                h('span', null, 'Услуги цеха:'),
-                h('strong', null, calc.addonsSum > 0 ? `+${store.formatPrice(calc.addonsSum)}` : 'Без сборки')
+                h('span', null, `Товар (${qty} шт.):`),
+                h('strong', null, store.formatPrice(calc.baseTotal))
+              ),
+              h(
+                'li',
+                { className: 'order-summary__item' },
+                h('span', null, 'Доп. опции:'),
+                h('strong', null, calc.addonsSum > 0 ? `+${store.formatPrice(calc.addonsSum)}` : 'Не выбрано')
               ),
               h(
                 'li',
@@ -1695,7 +1451,7 @@
                 'li',
                 { className: 'order-summary__item' },
                 h('span', null, 'Бонусы CoreClub:'),
-                h('strong', { style: { color: 'var(--color-primary)' } }, `+${calc.bonusCashback} Б`)
+                h('strong', { style: { color: 'var(--color-primary-light)' } }, `+${calc.bonusCashback} Б`)
               )
             ),
             h(
@@ -1707,23 +1463,21 @@
             h(
               'div',
               { className: 'order-form__actions' },
-              h(
-                'button',
-                { className: 'button button--primary button--lg', style: { flex: 1 }, type: 'submit' },
-                mode === 'builder' ? 'Заказать сборку ПК' : 'Оформить заказ'
-              ),
+              h('button', { className: 'button button--primary button--lg', style: { flex: 1 }, type: 'submit' }, 'Оформить заказ'),
               h(
                 'button',
                 {
                   className: 'button button--secondary',
                   type: 'button',
                   onClick: () => {
+                    setQty(1);
+                    setDelivery('pickup');
                     setSelectedAddons([]);
                     setPromoInput('');
                     setComment('');
                   },
                 },
-                'Сбросить опции'
+                'Сбросить'
               )
             )
           )
@@ -1744,5 +1498,5 @@
   mount('react-catalog-root', CatalogApp);
   mount('react-favorites-root', FavoritesApp);
   mount('react-account-root', AccountApp);
-  mount('react-order-root', OrderConfiguratorApp);
+  mount('react-order-root', OrderFormApp);
 })();

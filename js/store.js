@@ -351,52 +351,45 @@
 
   const ADDONS = [
     {
-      id: 'assembly',
-      title: 'Профессиональная сборка ПК и укладка кабелей',
-      desc: 'Аккуратный кабель-менеджмент стяжками, проверка прижима СЖО и фотоотчёт этапов сборки',
-      price: 3490,
+      id: 'warranty_plus',
+      title: 'Расширенная гарантия +1 год',
+      desc: 'Дополнительный год сервисного обслуживания и приоритетная замена товара',
+      price: 2490,
     },
     {
-      id: 'bios_os',
-      title: 'Прошивка свежего BIOS, настройка EXPO/XMP и установка ОС',
-      desc: 'Обновление микрокода материнской платы, выставление таймингов DDR5-6000 и драйверов',
-      price: 1990,
+      id: 'bench_check',
+      title: 'Проверка комплектующего на стенде перед выдачей',
+      desc: 'Запуск и проверка работоспособности, температур и отсутствия дефектов при получении',
+      price: 990,
     },
     {
-      id: 'stress',
-      title: 'Комплексный стресс-тест 4 часа (OCCT + FurMark + TestMem5)',
-      desc: 'Проверка стабильности под пиковой нагрузкой с выдачей протокола температур',
-      price: 1490,
-    },
-    {
-      id: 'paste',
-      title: 'Нанесение топовой термопасты Arctic MX-6',
-      desc: 'Снижение рабочих температур процессора на 3–5 °C по сравнению со штатным интерфейсом',
-      price: 690,
+      id: 'safe_pack',
+      title: 'Усиленная антистатическая упаковка для доставки',
+      desc: 'Дополнительная амортизирующая защита коробки при курьерской доставке',
+      price: 490,
     },
   ];
 
   const PROMO_CODES = {
-    MIREA10: {
-      code: 'MIREA10',
-      discountPercent: 10,
+    WELCOME5: {
+      code: 'WELCOME5',
+      discountPercent: 5,
       discountFixed: 0,
-      description: 'Скидка 10% студентам и преподавателям по студенческому билету',
+      description: 'Скидка 5% на заказ комплектующих в интернет-магазине',
     },
-    BUILD1500: {
-      code: 'BUILD1500',
+    PARTS1500: {
+      code: 'PARTS1500',
       discountPercent: 0,
       discountFixed: 1500,
-      description: 'Скидка 1 500 руб. на комплектующие и сборку ПК при заказе от 20 000 руб.',
+      description: 'Скидка 1 500 руб. на заказ от 20 000 руб.',
     },
   };
 
   const DEFAULT_PROFILE = {
     name: 'Георгий Крапчатов',
-    email: 'student@mirea.ru',
-    phone: '+7 (900) 555-11-25',
+    email: 'g.krapchatov@mail.ru',
+    phone: '+7 (900) 555-24-80',
     address: 'г. Москва, пр-т Вернадского, д. 78',
-    studentGroup: 'ЭФБО-11-25',
     bonusPoints: 3450,
   };
 
@@ -404,24 +397,21 @@
     {
       orderNumber: 'CM-2026-412',
       date: '2026-11-08',
-      productName: 'SSD Samsung 980 PRO 1 ТБ + ОЗУ G.Skill Trident Z5 RGB 32 ГБ DDR5-6000',
-      addons: ['Прошивка свежего BIOS, настройка EXPO/XMP и установка ОС'],
-      delivery: 'Самовывоз из сборочного шоурума (пр-т Вернадского, 78)',
-      total: 24723,
+      productName: 'SSD-накопитель Samsung 980 PRO 1 ТБ M.2 NVMe PCIe 4.0',
+      addons: ['Проверка комплектующего на стенде перед выдачей'],
+      delivery: 'Самовывоз из пункта выдачи (пр-т Вернадского, 78)',
+      total: 12980,
       status: 'Выдан',
       isDone: true,
     },
     {
       orderNumber: 'CM-2026-489',
       date: '2026-11-17',
-      productName: 'Сборка ПК: Ryzen 7 7800X3D + RTX 4070 SUPER 12GB + ASUS TUF B650 + 32 ГБ DDR5',
-      addons: [
-        'Профессиональная сборка ПК и укладка кабелей',
-        'Комплексный стресс-тест 4 часа (OCCT + FurMark + TestMem5)',
-      ],
-      delivery: 'Бережная доставка готового ПК в бронекоробе',
-      total: 179820,
-      status: 'На стресс-тесте в цеху',
+      productName: 'Видеокарта Palit GeForce RTX 4070 SUPER JetStream OC 12GB',
+      addons: ['Расширенная гарантия +1 год'],
+      delivery: 'Доставка курьером по Москве',
+      total: 85980,
+      status: 'Готов к выдаче',
       isDone: false,
     },
   ];
@@ -527,7 +517,7 @@
       addons,
       delivery,
       total: Number(total) || 0,
-      status: 'Принят в сборку',
+      status: 'Принят в обработку',
       isDone: false,
     };
     const nextOrders = [newOrder, ...orders];
