@@ -125,7 +125,6 @@ body {
 .chat-msg,
 .chat-widget__chip,
 .account-card,
-.promo-card,
 .order-history-card,
 .empty-state,
 .success-message,
@@ -754,50 +753,6 @@ a:focus-visible {
 
 .product-card--new .product-card__badge {
   background-color: var(--color-badge-new);
-}
-
-.fav-btn {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  color: var(--color-white);
-  background-color: rgba(17, 19, 24, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-}
-
-.fav-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.fav-btn:hover {
-  border-color: #f87171;
-  color: #f87171;
-}
-
-.fav-btn--active {
-  color: #f87171;
-  background-color: rgba(220, 38, 38, 0.22);
-  border-color: #f87171;
-}
-
-.fav-btn--active svg {
-  fill: currentColor;
 }
 
 .product-card__meta {
@@ -1715,35 +1670,6 @@ a:focus-visible {
   color: var(--color-success-text);
   background-color: var(--color-success-bg);
   border-color: var(--color-success);
-}
-
-.promo-grid {
-  display: grid;
-  gap: var(--space-md);
-}
-
-.promo-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-  padding: var(--space-lg);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.promo-code {
-  display: inline-block;
-  padding: 4px 10px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--color-primary-light);
-  background-color: var(--color-surface-alt);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
 }
 
 .empty-state {

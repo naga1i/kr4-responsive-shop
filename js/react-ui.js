@@ -2,7 +2,7 @@
 // Пользовательский интерфейс на базе библиотеки React 18 (js/react-ui.js)
 // Магазин комплектующих ПК «CoreMirea»:
 // шапка действий, чат-консультант (слева), каталог с живым поиском,
-// избранное, личный кабинет и форма оформления заказа.
+// личный кабинет и форма оформления заказа.
 // ===============================
 
 (function () {
@@ -25,20 +25,10 @@
 
     return {
       theme: store.getTheme(),
-      favorites: store.getFavorites(),
       profile: store.getProfile(),
       orders: store.getOrders(),
     };
   }
-
-  const HeartIcon = () =>
-    h(
-      'svg',
-      { viewBox: '0 0 24 24', 'aria-hidden': 'true' },
-      h('path', {
-        d: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z',
-      })
-    );
 
   const UserIcon = () =>
     h(
@@ -91,9 +81,8 @@
   // 1. Панель пользователя в шапке
   // ===============================
   function HeaderActionsWidget() {
-    const { theme, favorites, profile } = useElectroStore();
+    const { theme, profile } = useElectroStore();
     const path = window.location.pathname;
-    const isFavPage = path.endsWith('favorites.html');
     const isAccountPage = path.endsWith('account.html');
     const firstName = (profile.name || 'Кабинет').trim().split(/\s+/)[0] || 'Кабинет';
     const isLight = theme === 'light';
@@ -102,18 +91,6 @@
     return h(
       React.Fragment,
       null,
-      h(
-        'a',
-        {
-          className: `header-action-link${isFavPage ? ' header-action-link--active' : ''}`,
-          href: 'favorites.html',
-          'aria-label': `Избранное: позиций ${favorites.length}`,
-          title: 'Избранные товары',
-        },
-        h(HeartIcon),
-        h('span', null, 'Избранное'),
-        h('span', { className: 'header-action-link__badge' }, String(favorites.length))
-      ),
       h(
         'a',
         {
@@ -161,8 +138,8 @@
     if (q.includes('сокет') || q.includes('am5') || q.includes('1700') || q.includes('процессор') || q.includes('плат')) {
       return 'Под AMD Ryzen 7 7800X3D (Socket AM5) подходят платы на чипсете B650 и память DDR5. Под Intel Core i5-14600KF (Socket LGA 1700) — платы B760. В каталоге можно сразу отфильтровать товары по сокету.';
     }
-    if (q.includes('скидк') || q.includes('промокод') || q.includes('бонус')) {
-      return 'По промокоду WELCOME5 действует скидка 5% на заказ, а PARTS1500 даёт скидку 1 500 руб. при покупке от 20 000 руб. Также возвращаем 3% бонусами в Личный кабинет.';
+    if (q.includes('оплат') || q.includes('карт') || q.includes('сбп')) {
+      return 'Принимаем оплату банковскими картами, через СБП и наличными при самовывозе или курьеру. За каждый заказ начисляем 3% бонусами в Личный кабинет.';
     }
     if (q.includes('гарант') || q.includes('возврат') || q.includes('обмен')) {
       return 'На видеокарты, платы, СЖО и SSD действует официальная гарантия до 36 месяцев, на ОЗУ — 60 месяцев, на блоки питания — до 84 месяцев. Возврат возможен в течение 14 дней.';
@@ -214,7 +191,7 @@
       { label: 'Видеокарты в наличии', q: 'Какие видеокарты сейчас есть в наличии?' },
       { label: 'Сокеты AM5 / 1700', q: 'Какие платы подходят под сокет AM5 и LGA 1700?' },
       { label: 'Доставка и самовывоз', q: 'Какие условия доставки и самовывоза?' },
-      { label: 'Промокоды', q: 'Какие промокоды и скидки действуют?' },
+      { label: 'Гарантия и оплата', q: 'Какая гарантия и способы оплаты?' },
     ];
 
     return h(
@@ -310,9 +287,9 @@
   }
 
   // ===============================
-  // 3. Карточка товара (общий React-компонент)
+  // 3. Карточка товара
   // ===============================
-  function ProductCard({ product, isFav, onToggleFav }) {
+  function ProductCard({ product }) {
     const imgProps = product.responsiveBase
       ? {
           src: `${product.responsiveBase}-640.jpg`,
@@ -344,19 +321,7 @@
           height: 480,
           loading: 'lazy',
         }),
-        product.badge ? h('span', { className: 'product-card__badge' }, product.badge) : null,
-        h(
-          'button',
-          {
-            className: `fav-btn${isFav ? ' fav-btn--active' : ''}`,
-            type: 'button',
-            'aria-pressed': String(isFav),
-            'aria-label': isFav ? 'Убрать из избранного' : 'Добавить в избранное',
-            title: isFav ? 'Убрать из избранного' : 'Добавить в избранное',
-            onClick: () => onToggleFav(product.id),
-          },
-          h(HeartIcon)
-        )
+        product.badge ? h('span', { className: 'product-card__badge' }, product.badge) : null
       ),
       h(
         'div',
@@ -422,7 +387,6 @@
   // 4. Каталог комплектующих с живым поиском и фильтрами (catalog.html)
   // ===============================
   function CatalogApp() {
-    const { favorites } = useElectroStore();
     const params = new URLSearchParams(window.location.search);
 
     const [category, setCategory] = useState(params.get('category') || 'all');
@@ -686,126 +650,20 @@
           : h(
               'div',
               { className: 'products-grid' },
-              filteredProducts.map((product) =>
-                h(ProductCard, {
-                  key: product.id,
-                  product,
-                  isFav: favorites.includes(product.id),
-                  onToggleFav: store.toggleFavorite,
-                })
-              )
+              filteredProducts.map((product) => h(ProductCard, { key: product.id, product }))
             )
       )
     );
   }
 
   // ===============================
-  // 5. Страница «Избранное» (favorites.html)
-  // ===============================
-  function FavoritesApp() {
-    const { favorites } = useElectroStore();
-    const favProducts = useMemo(
-      () => store.PRODUCTS.filter((p) => favorites.includes(p.id)),
-      [favorites]
-    );
-    const totalSum = favProducts.reduce((acc, p) => acc + p.price, 0);
-
-    if (favProducts.length === 0) {
-      return h(
-        'div',
-        { className: 'empty-state' },
-        h('h2', { className: 'section__title' }, 'Список избранного пуст'),
-        h(
-          'p',
-          { className: 'section__text', style: { marginBottom: '20px' } },
-          'Добавляйте видеокарты, процессоры и другие комплектующие в избранное, чтобы не потерять нужные позиции.'
-        ),
-        h(
-          'div',
-          { style: { display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '12px' } },
-          h('a', { className: 'button button--primary', href: 'catalog.html' }, 'Перейти в каталог'),
-          h(
-            'button',
-            {
-              className: 'button button--secondary',
-              type: 'button',
-              onClick: () => {
-                store.toggleFavorite(1);
-                store.toggleFavorite(2);
-                store.toggleFavorite(3);
-              },
-            },
-            'Добавить популярные товары'
-          )
-        )
-      );
-    }
-
-    return h(
-      React.Fragment,
-      null,
-      h(
-        'div',
-        {
-          className: 'account-card',
-          style: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '16px',
-            marginBottom: '24px',
-          },
-        },
-        h(
-          'div',
-          null,
-          h('strong', { style: { fontSize: '17px' } }, `Сохранено товаров: ${favProducts.length}`),
-          h(
-            'p',
-            { className: 'section__text', style: { fontSize: '14px' } },
-            `Общая стоимость: ${store.formatPrice(totalSum)}`
-          )
-        ),
-        h(
-          'div',
-          { style: { display: 'flex', flexWrap: 'wrap', gap: '10px' } },
-          h('a', { className: 'button button--primary button--sm', href: 'order.html' }, 'Перейти к заказу'),
-          h(
-            'button',
-            {
-              className: 'button button--secondary button--sm',
-              type: 'button',
-              onClick: () => store.clearFavorites(),
-            },
-            'Очистить список'
-          )
-        )
-      ),
-      h(
-        'div',
-        { className: 'products-grid' },
-        favProducts.map((product) =>
-          h(ProductCard, {
-            key: product.id,
-            product,
-            isFav: true,
-            onToggleFav: store.toggleFavorite,
-          })
-        )
-      )
-    );
-  }
-
-  // ===============================
-  // 6. Страница «Личный кабинет» (account.html)
+  // 5. Страница «Личный кабинет» (account.html)
   // ===============================
   function AccountApp() {
-    const { profile, orders, favorites } = useElectroStore();
+    const { profile, orders } = useElectroStore();
     const [activeTab, setActiveTab] = useState('orders');
     const [formState, setFormState] = useState(profile);
     const [savedBanner, setSavedBanner] = useState(false);
-    const [copiedCode, setCopiedCode] = useState('');
 
     const initials = (profile.name || 'ГК')
       .split(/\s+/)
@@ -819,14 +677,6 @@
       store.saveProfile(formState);
       setSavedBanner(true);
       setTimeout(() => setSavedBanner(false), 3500);
-    };
-
-    const copyPromo = (code) => {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(code).catch(() => {});
-      }
-      setCopiedCode(code);
-      setTimeout(() => setCopiedCode(''), 2000);
     };
 
     return h(
@@ -858,7 +708,6 @@
             'div',
             { style: { display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' } },
             h('span', { className: 'product__chip' }, `Заказов: ${orders.length}`),
-            h('span', { className: 'product__chip' }, `В избранном: ${favorites.length}`),
             h('span', { className: 'product__chip' }, 'Постоянный покупатель')
           )
         ),
@@ -880,7 +729,7 @@
             'div',
             { style: { display: 'flex', flexWrap: 'wrap', gap: '10px' } },
             h('a', { className: 'button button--primary button--sm', href: 'catalog.html' }, 'В каталог товаров'),
-            h('a', { className: 'button button--secondary button--sm', href: 'favorites.html' }, 'Моё избранное')
+            h('a', { className: 'button button--secondary button--sm', href: 'order.html' }, 'Оформить заказ')
           )
         )
       ),
@@ -890,7 +739,6 @@
         [
           { id: 'orders', label: `Мои заказы (${orders.length})` },
           { id: 'profile', label: 'Профиль и адрес' },
-          { id: 'promos', label: 'Промокоды' },
         ].map((tab) =>
           h(
             'button',
@@ -1059,39 +907,12 @@
               )
             )
           )
-        : null,
-      activeTab === 'promos'
-        ? h(
-            'div',
-            { className: 'promo-grid' },
-            Object.values(store.PROMO_CODES).map((p) =>
-              h(
-                'div',
-                { key: p.code, className: 'promo-card' },
-                h(
-                  'div',
-                  null,
-                  h('span', { className: 'promo-code' }, p.code),
-                  h('p', { style: { margin: '8px 0 0', fontSize: '14px' } }, p.description)
-                ),
-                h(
-                  'button',
-                  {
-                    className: 'button button--secondary button--sm',
-                    type: 'button',
-                    onClick: () => copyPromo(p.code),
-                  },
-                  copiedCode === p.code ? 'Скопировано!' : 'Скопировать код'
-                )
-              )
-            )
-          )
         : null
     );
   }
 
   // ===============================
-  // 7. Оформление заказа комплектующих (order.html)
+  // 6. Оформление заказа комплектующих (order.html)
   // ===============================
   function OrderFormApp() {
     const { profile } = useElectroStore();
@@ -1105,7 +926,6 @@
     const [qty, setQty] = useState(1);
     const [delivery, setDelivery] = useState('pickup');
     const [selectedAddons, setSelectedAddons] = useState([]);
-    const [promoInput, setPromoInput] = useState('');
     const [name, setName] = useState(profile.name || '');
     const [phone, setPhone] = useState(profile.phone || '');
     const [email, setEmail] = useState(profile.email || '');
@@ -1128,23 +948,11 @@
       const deliveryPrice =
         delivery === 'pickup' ? 0 : delivery === 'express' ? 890 : baseTotal >= 30000 ? 0 : 490;
 
-      const normalizedCode = promoInput.trim().toUpperCase();
-      const promoObj = store.PROMO_CODES[normalizedCode] || null;
-
-      let discount = 0;
-      if (promoObj) {
-        if (promoObj.discountPercent > 0) {
-          discount = Math.round(((baseTotal + addonsSum) * promoObj.discountPercent) / 100);
-        } else if (promoObj.discountFixed > 0 && baseTotal >= 20000) {
-          discount = promoObj.discountFixed;
-        }
-      }
-
-      const finalTotal = Math.max(0, baseTotal + addonsSum + deliveryPrice - discount);
+      const finalTotal = Math.max(0, baseTotal + addonsSum + deliveryPrice);
       const bonusCashback = Math.max(100, Math.round(finalTotal * 0.03));
 
-      return { baseTotal, addonObjs, addonsSum, deliveryPrice, promoObj, discount, finalTotal, bonusCashback };
-    }, [product, qty, selectedAddons, delivery, promoInput]);
+      return { baseTotal, addonObjs, addonsSum, deliveryPrice, finalTotal, bonusCashback };
+    }, [product, qty, selectedAddons, delivery]);
 
     const deliveryLabels = {
       pickup: 'Самовывоз из пункта выдачи (пр-т Вернадского, 78)',
@@ -1296,30 +1104,10 @@
             h(
               'fieldset',
               { className: 'order-form__fieldset' },
-              h('legend', { className: 'order-form__legend' }, '3. Промокод и контакты получателя'),
+              h('legend', { className: 'order-form__legend' }, '3. Контакты получателя'),
               h(
                 'div',
                 { className: 'order-form__row' },
-                h(
-                  'div',
-                  { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'cfg-promo' }, 'Промокод'),
-                  h('input', {
-                    className: 'order-form__input',
-                    id: 'cfg-promo',
-                    type: 'text',
-                    placeholder: 'WELCOME5 или PARTS1500',
-                    value: promoInput,
-                    onChange: (e) => setPromoInput(e.target.value),
-                  }),
-                  h(
-                    'small',
-                    { className: 'order-form__hint' },
-                    calc.promoObj
-                      ? `Применён код ${calc.promoObj.code}: −${store.formatPrice(calc.discount)}`
-                      : 'Доступные коды в Личном кабинете: WELCOME5, PARTS1500'
-                  )
-                ),
                 h(
                   'div',
                   { className: 'order-form__field' },
@@ -1333,11 +1121,7 @@
                     value: name,
                     onChange: (e) => setName(e.target.value),
                   })
-                )
-              ),
-              h(
-                'div',
-                { className: 'order-form__row' },
+                ),
                 h(
                   'div',
                   { className: 'order-form__field' },
@@ -1351,20 +1135,20 @@
                     value: phone,
                     onChange: (e) => setPhone(e.target.value),
                   })
-                ),
-                h(
-                  'div',
-                  { className: 'order-form__field' },
-                  h('label', { className: 'order-form__label', htmlFor: 'cfg-email' }, 'E-mail для электронного чека *'),
-                  h('input', {
-                    className: 'order-form__input',
-                    id: 'cfg-email',
-                    type: 'email',
-                    required: true,
-                    value: email,
-                    onChange: (e) => setEmail(e.target.value),
-                  })
                 )
+              ),
+              h(
+                'div',
+                { className: 'order-form__field' },
+                h('label', { className: 'order-form__label', htmlFor: 'cfg-email' }, 'E-mail для электронного чека *'),
+                h('input', {
+                  className: 'order-form__input',
+                  id: 'cfg-email',
+                  type: 'email',
+                  required: true,
+                  value: email,
+                  onChange: (e) => setEmail(e.target.value),
+                })
               ),
               h(
                 'div',
@@ -1439,14 +1223,6 @@
                 h('span', null, 'Доставка:'),
                 h('strong', null, calc.deliveryPrice === 0 ? 'Бесплатно' : `+${store.formatPrice(calc.deliveryPrice)}`)
               ),
-              calc.discount > 0
-                ? h(
-                    'li',
-                    { className: 'order-summary__item' },
-                    h('span', null, `Скидка (${calc.promoObj.code}):`),
-                    h('strong', { style: { color: 'var(--color-success)' } }, `−${store.formatPrice(calc.discount)}`)
-                  )
-                : null,
               h(
                 'li',
                 { className: 'order-summary__item' },
@@ -1473,7 +1249,6 @@
                     setQty(1);
                     setDelivery('pickup');
                     setSelectedAddons([]);
-                    setPromoInput('');
                     setComment('');
                   },
                 },
@@ -1496,7 +1271,6 @@
   mount('react-header-actions', HeaderActionsWidget);
   mount('react-chat-root', ChatConsultantWidget);
   mount('react-catalog-root', CatalogApp);
-  mount('react-favorites-root', FavoritesApp);
   mount('react-account-root', AccountApp);
   mount('react-order-root', OrderFormApp);
 })();

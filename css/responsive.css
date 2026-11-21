@@ -172,7 +172,6 @@ body {
 .advantages-grid,
 .reviews__list,
 .contacts-grid,
-.promo-grid,
 .account-dashboard {
   grid-template-columns: 1fr;
 }
@@ -203,7 +202,6 @@ body {
   }
 
   .contacts-grid,
-  .promo-grid,
   .account-dashboard {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

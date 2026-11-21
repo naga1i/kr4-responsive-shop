@@ -34,32 +34,7 @@
     updateScrollTopButton();
   }
 
-  // 2. Синхронизация кнопок «В избранное» на статических HTML-карточках
-  const syncStaticFavButtons = () => {
-    document.querySelectorAll('.js-fav-toggle').forEach((btn) => {
-      const id = Number(btn.dataset.productId);
-      const active = store.isFavorite(id);
-      btn.classList.toggle('fav-btn--active', active);
-      btn.setAttribute('aria-pressed', String(active));
-      const label = active ? 'Убрать из избранного' : 'Добавить в избранное';
-      btn.setAttribute('aria-label', label);
-      btn.setAttribute('title', label);
-    });
-  };
-
-  document.addEventListener('click', (event) => {
-    const favBtn = event.target.closest('.js-fav-toggle');
-    if (favBtn) {
-      event.preventDefault();
-      store.toggleFavorite(Number(favBtn.dataset.productId));
-      syncStaticFavButtons();
-    }
-  });
-
-  window.addEventListener('electrostore:change', syncStaticFavButtons);
-  syncStaticFavButtons();
-
-  // 3. Модальное окно быстрого заказа (<dialog id="order-dialog">)
+  // 2. Модальное окно быстрого заказа (<dialog id="order-dialog">)
   const orderDialog = document.getElementById('order-dialog');
   const orderForm = document.getElementById('order-form');
   const closeDialogButton = document.getElementById('close-order-dialog');

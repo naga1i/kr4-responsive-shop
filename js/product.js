@@ -26,7 +26,6 @@
   const priceEl = document.getElementById('product-price');
   const quickBtn = document.getElementById('product-quick-order');
   const configLink = document.getElementById('product-config-link');
-  const favBtn = document.getElementById('product-fav-btn');
   const specsTbody = document.getElementById('product-specs-tbody');
 
   if (breadcrumbEl) breadcrumbEl.textContent = product.name;
@@ -72,23 +71,6 @@
 
   if (configLink) {
     configLink.href = `order.html?id=${product.id}`;
-  }
-
-  const updateProductFavButton = () => {
-    if (!favBtn) return;
-    const fav = store.isFavorite(product.id);
-    favBtn.textContent = fav ? '♥ В избранном' : '♡ В избранное';
-    favBtn.classList.toggle('button--primary', fav);
-    favBtn.classList.toggle('button--secondary', !fav);
-  };
-
-  if (favBtn) {
-    favBtn.addEventListener('click', () => {
-      store.toggleFavorite(product.id);
-      updateProductFavButton();
-    });
-    window.addEventListener('electrostore:change', updateProductFavButton);
-    updateProductFavButton();
   }
 
   if (specsTbody) {

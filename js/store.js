@@ -5,7 +5,6 @@
 (function () {
   const STORAGE_KEYS = {
     THEME: 'coremirea-theme',
-    FAVORITES: 'coremirea-favorites',
     PROFILE: 'coremirea-profile',
     ORDERS: 'coremirea-orders',
   };
@@ -370,21 +369,6 @@
     },
   ];
 
-  const PROMO_CODES = {
-    WELCOME5: {
-      code: 'WELCOME5',
-      discountPercent: 5,
-      discountFixed: 0,
-      description: 'Скидка 5% на заказ комплектующих в интернет-магазине',
-    },
-    PARTS1500: {
-      code: 'PARTS1500',
-      discountPercent: 0,
-      discountFixed: 1500,
-      description: 'Скидка 1 500 руб. на заказ от 20 000 руб.',
-    },
-  };
-
   const DEFAULT_PROFILE = {
     name: 'Георгий Крапчатов',
     email: 'g.krapchatov@mail.ru',
@@ -453,34 +437,6 @@
     emitChange({ type: 'theme', theme: normalized });
   };
 
-  const getFavorites = () => {
-    const stored = safeReadJson(STORAGE_KEYS.FAVORITES, null);
-    if (Array.isArray(stored)) {
-      return stored.map(Number);
-    }
-    const initial = [1, 2, 3];
-    safeWriteJson(STORAGE_KEYS.FAVORITES, initial);
-    return initial;
-  };
-
-  const isFavorite = (productId) => getFavorites().includes(Number(productId));
-
-  const toggleFavorite = (productId) => {
-    const id = Number(productId);
-    const current = getFavorites();
-    const next = current.includes(id)
-      ? current.filter((item) => item !== id)
-      : [...current, id];
-    safeWriteJson(STORAGE_KEYS.FAVORITES, next);
-    emitChange({ type: 'favorites', favorites: next });
-    return next.includes(id);
-  };
-
-  const clearFavorites = () => {
-    safeWriteJson(STORAGE_KEYS.FAVORITES, []);
-    emitChange({ type: 'favorites', favorites: [] });
-  };
-
   const getProfile = () => {
     const stored = safeReadJson(STORAGE_KEYS.PROFILE, null);
     if (stored && typeof stored === 'object') {
@@ -542,14 +498,9 @@
   window.ElectroStore = {
     PRODUCTS,
     ADDONS,
-    PROMO_CODES,
     formatPrice,
     getTheme,
     setTheme,
-    getFavorites,
-    isFavorite,
-    toggleFavorite,
-    clearFavorites,
     getProfile,
     saveProfile,
     getOrders,
