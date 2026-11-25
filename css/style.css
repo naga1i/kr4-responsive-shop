@@ -1548,6 +1548,33 @@ html[data-theme="light"] .theme-toggle__icon--moon {
   margin-top: var(--space-xs);
 }
 
+.bonus-slider-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.bonus-slider-wrap {
+  display: grid;
+  gap: 4px;
+}
+
+.bonus-slider {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.bonus-slider__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+
 .addons-list {
   display: flex;
   flex-direction: column;

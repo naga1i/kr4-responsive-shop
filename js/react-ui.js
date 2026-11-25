@@ -1170,18 +1170,46 @@
                     'div',
                     { className: 'order-form__field' },
                     h('label', { className: 'order-form__label', htmlFor: 'cfg-bonus-amount' }, 'Сколько бонусов списать (1 Б = 1 руб., до 20% от заказа)'),
-                    h('input', {
-                      className: 'order-form__input',
-                      id: 'cfg-bonus-amount',
-                      type: 'number',
-                      min: 0,
-                      max: calc.maxRedeemable,
-                      value: Math.min(bonusInput, calc.maxRedeemable),
-                      onChange: (e) =>
-                        setBonusInput(
-                          Math.max(0, Math.min(calc.maxRedeemable, Number(e.target.value) || 0))
-                        ),
-                    })
+                    h(
+                      'div',
+                      { className: 'bonus-slider-row' },
+                      h(
+                        'div',
+                        { className: 'bonus-slider-wrap' },
+                        h('input', {
+                          className: 'bonus-slider',
+                          id: 'cfg-bonus-range',
+                          type: 'range',
+                          min: 0,
+                          max: calc.maxRedeemable,
+                          step: 1,
+                          'aria-label': 'Выбор количества списываемых бонусов ползунком',
+                          value: Math.min(bonusInput, calc.maxRedeemable),
+                          onChange: (e) =>
+                            setBonusInput(
+                              Math.max(0, Math.min(calc.maxRedeemable, Number(e.target.value) || 0))
+                            ),
+                        }),
+                        h(
+                          'div',
+                          { className: 'bonus-slider__scale' },
+                          h('span', null, '0 Б'),
+                          h('span', null, `${calc.maxRedeemable.toLocaleString('ru-RU')} Б`)
+                        )
+                      ),
+                      h('input', {
+                        className: 'order-form__input',
+                        id: 'cfg-bonus-amount',
+                        type: 'number',
+                        min: 0,
+                        max: calc.maxRedeemable,
+                        value: Math.min(bonusInput, calc.maxRedeemable),
+                        onChange: (e) =>
+                          setBonusInput(
+                            Math.max(0, Math.min(calc.maxRedeemable, Number(e.target.value) || 0))
+                          ),
+                      })
+                    )
                   )
                 : null
             ),
