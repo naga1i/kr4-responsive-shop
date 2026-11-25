@@ -348,21 +348,28 @@ a:focus-visible {
 }
 
 .theme-toggle {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
   padding: 0;
+  overflow: hidden;
   color: #e2e8f0;
   background-color: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  transition: background-color 0.28s ease, border-color 0.28s ease, color 0.28s ease, transform 0.18s ease;
 }
 
-.theme-toggle svg {
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.theme-toggle__icon {
+  position: absolute;
   width: 18px;
   height: 18px;
   fill: none;
@@ -370,6 +377,29 @@ a:focus-visible {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+}
+
+.theme-toggle__icon--sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle__icon--moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.45);
+}
+
+.theme-toggle--light .theme-toggle__icon--sun,
+html[data-theme="light"] .theme-toggle__icon--sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.45);
+}
+
+.theme-toggle--light .theme-toggle__icon--moon,
+html[data-theme="light"] .theme-toggle__icon--moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
 .theme-toggle:hover {
@@ -829,22 +859,97 @@ a:focus-visible {
 }
 
 /* ===============================
-   10. Отзывы покупателей
+   10. Отзывы покупателей (листаемая карусель + hover-анимация)
    =============================== */
+
+.reviews__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reviews__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+
+.reviews__nav-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reviews__nav-btn:hover:not(:disabled) {
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.reviews__nav-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.reviews__nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .reviews__list {
   display: grid;
-  gap: var(--space-lg);
+  grid-auto-flow: column;
+  grid-auto-columns: calc(100% - 12px);
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 8px 2px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.reviews__list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.reviews__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.reviews__list::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-strong);
+  border-radius: 3px;
 }
 
 .review-card {
   display: flex;
   flex-direction: column;
+  scroll-snap-align: start;
   padding: var(--space-lg);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-top: 3px solid var(--color-primary);
   border-radius: var(--radius-md);
+  transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, background-color 0.25s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
 }
 
 .review-card__top {

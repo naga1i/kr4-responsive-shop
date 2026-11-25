@@ -1,5 +1,5 @@
 // ===============================
-// Общая клиентская логика страниц: кнопка «Наверх», модальное окно быстрого заказа, избранное на статических карточках
+// Общая клиентская логика страниц: кнопка «Наверх», карусель отзывов и модальное окно быстрого заказа
 // ===============================
 
 (function () {
@@ -34,14 +34,72 @@
     updateScrollTopButton();
   }
 
-  // 2. Модальное окно быстрого заказа (<dialog id="order-dialog">)
+  // 2. Листаемая карусель отзывов на главной странице
+  const reviewsList = document.getElementById('reviews-list');
+  const reviewsPrev = document.getElementById('reviews-prev');
+  const reviewsNext = document.getElementById('reviews-next');
+
+  if (reviewsList && reviewsPrev && reviewsNext) {
+    const updateReviewButtons = () => {
+      const maxScroll = reviewsList.scrollWidth - reviewsList.clientWidth;
+      reviewsPrev.disabled = reviewsList.scrollLeft <= 4;
+      reviewsNext.disabled = reviewsList.scrollLeft >= maxScroll - 4;
+    };
+
+    const getScrollStep = () => {
+      const firstCard = reviewsList.querySelector('.review-card');
+      return firstCard ? firstCard.getBoundingClientRect().width + 20 : 360;
+    };
+
+    reviewsPrev.addEventListener('click', () => {
+      reviewsList.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+    });
+
+    reviewsNext.addEventListener('click', () => {
+      reviewsList.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+    });
+
+    reviewsList.addEventListener('scroll', updateReviewButtons, { passive: true });
+    window.addEventListener('resize', updateReviewButtons, { passive: true });
+    updateReviewButtons();
+  }
+
+  // 3. Модальное окно быстрого заказа (<dialog id="order-dialog">) с возможностью списания бонусов
   const orderDialog = document.getElementById('order-dialog');
   const orderForm = document.getElementById('order-form');
   const closeDialogButton = document.getElementById('close-order-dialog');
   const closeDialogCross = document.getElementById('close-order-dialog-cross');
   const dialogProductName = document.getElementById('dialog-product-name');
   const quickProductSelect = document.getElementById('quick-product');
+  const quickQtyInput = document.getElementById('order-qty');
+  const bonusCheckbox = document.getElementById('order-use-bonuses');
+  const bonusLabelText = document.getElementById('order-bonus-label');
   const successMessage = document.getElementById('success-message');
+
+  const refreshDialogPricing = () => {
+    if (!quickProductSelect || !dialogProductName) return;
+    const product = store.getProductById(Number(quickProductSelect.value));
+    const qty = Math.max(1, Number(quickQtyInput ? quickQtyInput.value : 1));
+    const subtotal = product.price * qty;
+    const maxRedeemable = store.calcMaxRedeemable(subtotal);
+
+    if (bonusCheckbox && bonusLabelText) {
+      bonusCheckbox.disabled = maxRedeemable <= 0;
+      if (maxRedeemable <= 0) bonusCheckbox.checked = false;
+      const balance = Number(store.getProfile().bonusPoints) || 0;
+      bonusLabelText.textContent =
+        maxRedeemable > 0
+          ? `Списать ${maxRedeemable.toLocaleString('ru-RU')} бонусов (на счёте ${balance.toLocaleString('ru-RU')} Б, до 20% заказа)`
+          : 'На бонусном счёте нет доступных баллов';
+    }
+
+    const used = bonusCheckbox && bonusCheckbox.checked ? maxRedeemable : 0;
+    const finalPrice = Math.max(0, subtotal - used);
+    dialogProductName.textContent =
+      used > 0
+        ? `Вы выбрали: ${product.name} — ${store.formatPrice(finalPrice)} (списано ${used} Б)`
+        : `Вы выбрали: ${product.name} (${store.formatPrice(finalPrice)})`;
+  };
 
   const openQuickOrder = (productIdentifier) => {
     if (!orderDialog || !orderForm) return;
@@ -55,11 +113,10 @@
       quickProductSelect.value = String(product.id);
     }
 
-    if (dialogProductName && product) {
-      dialogProductName.textContent = `Вы выбрали: ${product.name} (${store.formatPrice(product.price)})`;
+    if (bonusCheckbox) {
+      bonusCheckbox.checked = false;
     }
 
-    // Автоподстановка контактов из Личного кабинета, если поля пустые
     const profile = store.getProfile();
     const nameInput = document.getElementById('order-name');
     const phoneInput = document.getElementById('order-phone');
@@ -68,29 +125,25 @@
     if (phoneInput && !phoneInput.value) phoneInput.value = profile.phone || '';
     if (emailInput && !emailInput.value) emailInput.value = profile.email || '';
 
+    refreshDialogPricing();
     orderDialog.showModal();
     lockPageScroll();
   };
 
-  // Экспортируем функцию открытия модального окна для React-компонентов
   window.openQuickOrderModal = openQuickOrder;
 
-  // Делегирование клика по любой кнопке .js-quick-order
   document.addEventListener('click', (event) => {
     const trigger = event.target.closest('.js-quick-order');
     if (!trigger || trigger.disabled) return;
     event.preventDefault();
-    const prod = trigger.dataset.productId || trigger.dataset.product || 4;
+    const prod = trigger.dataset.productId || trigger.dataset.product || 1;
     openQuickOrder(prod);
   });
 
   if (orderDialog && orderForm) {
-    if (quickProductSelect && dialogProductName) {
-      quickProductSelect.addEventListener('change', () => {
-        const p = store.getProductById(Number(quickProductSelect.value));
-        dialogProductName.textContent = `Вы выбрали: ${p.name} (${store.formatPrice(p.price)})`;
-      });
-    }
+    if (quickProductSelect) quickProductSelect.addEventListener('change', refreshDialogPricing);
+    if (quickQtyInput) quickQtyInput.addEventListener('input', refreshDialogPricing);
+    if (bonusCheckbox) bonusCheckbox.addEventListener('change', refreshDialogPricing);
 
     if (closeDialogButton) {
       closeDialogButton.addEventListener('click', () => orderDialog.close());
@@ -110,6 +163,7 @@
 
     orderForm.addEventListener('reset', () => {
       Array.from(orderForm.elements).forEach((el) => el.removeAttribute('aria-invalid'));
+      setTimeout(refreshDialogPricing, 0);
     });
 
     orderForm.addEventListener('submit', (event) => {
@@ -130,10 +184,12 @@
         return;
       }
 
-      const chosenId = quickProductSelect ? Number(quickProductSelect.value) : 4;
+      const chosenId = quickProductSelect ? Number(quickProductSelect.value) : 1;
       const product = store.getProductById(chosenId);
-      const qtyInput = document.getElementById('order-qty');
-      const qty = Math.max(1, Number(qtyInput ? qtyInput.value : 1));
+      const qty = Math.max(1, Number(quickQtyInput ? quickQtyInput.value : 1));
+      const subtotal = product.price * qty;
+      const bonusesUsed =
+        bonusCheckbox && bonusCheckbox.checked ? store.calcMaxRedeemable(subtotal) : 0;
       const deliverySelect = document.getElementById('order-delivery');
       const deliveryLabel = deliverySelect
         ? deliverySelect.options[deliverySelect.selectedIndex].text
@@ -143,11 +199,13 @@
         productName: qty > 1 ? `${product.name} × ${qty} шт.` : product.name,
         addons: [],
         delivery: deliveryLabel,
-        total: product.price * qty,
+        total: Math.max(0, subtotal - bonusesUsed),
+        bonusesUsed,
       });
 
       if (successMessage) {
-        successMessage.innerHTML = `<strong>Заказ #${order.orderNumber} успешно оформлен!</strong> Начислено <strong>+${bonusEarned} бонусов</strong> в <a href="account.html">Личном кабинете</a>. Менеджер свяжется с вами в течение 10 минут.`;
+        const spentText = bonusesUsed > 0 ? ` Списано <strong>${bonusesUsed} Б</strong>.` : '';
+        successMessage.innerHTML = `<strong>Заказ #${order.orderNumber} успешно оформлен!</strong>${spentText} Начислено <strong>+${bonusEarned} Б (1%)</strong> в <a href="account.html">Личном кабинете</a>.`;
         successMessage.hidden = false;
       }
 

@@ -41,7 +41,7 @@
   const SunIcon = () =>
     h(
       'svg',
-      { viewBox: '0 0 24 24', 'aria-hidden': 'true' },
+      { className: 'theme-toggle__icon theme-toggle__icon--sun', viewBox: '0 0 24 24', 'aria-hidden': 'true' },
       h('circle', { cx: '12', cy: '12', r: '5' }),
       h('line', { x1: '12', y1: '1', x2: '12', y2: '3' }),
       h('line', { x1: '12', y1: '21', x2: '12', y2: '23' }),
@@ -56,7 +56,7 @@
   const MoonIcon = () =>
     h(
       'svg',
-      { viewBox: '0 0 24 24', 'aria-hidden': 'true' },
+      { className: 'theme-toggle__icon theme-toggle__icon--moon', viewBox: '0 0 24 24', 'aria-hidden': 'true' },
       h('path', { d: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' })
     );
 
@@ -115,14 +115,15 @@
       h(
         'button',
         {
-          className: 'theme-toggle',
+          className: `theme-toggle${isLight ? ' theme-toggle--light' : ''}`,
           type: 'button',
           id: 'theme-toggle',
           'aria-label': themeLabel,
           title: themeLabel,
           onClick: () => store.setTheme(store.getTheme() === 'light' ? 'dark' : 'light'),
         },
-        isLight ? h(MoonIcon) : h(SunIcon)
+        h(SunIcon),
+        h(MoonIcon)
       )
     );
   }
@@ -138,8 +139,8 @@
     if (q.includes('сокет') || q.includes('am5') || q.includes('1700') || q.includes('процессор') || q.includes('плат')) {
       return 'Под AMD Ryzen 7 7800X3D (Socket AM5) подходят платы на чипсете B650 и память DDR5. Под Intel Core i5-14600KF (Socket LGA 1700) — платы B760. В каталоге можно сразу отфильтровать товары по сокету.';
     }
-    if (q.includes('оплат') || q.includes('карт') || q.includes('сбп')) {
-      return 'Принимаем оплату банковскими картами, через СБП и наличными при самовывозе или курьеру. За каждый заказ начисляем 3% бонусами в Личный кабинет.';
+    if (q.includes('оплат') || q.includes('карт') || q.includes('сбп') || q.includes('бонус')) {
+      return 'Принимаем оплату банковскими картами, через СБП и наличными. За каждый заказ начисляем 1% бонусами в Личный кабинет, а накопленными бонусами можно оплатить до 20% следующего заказа.';
     }
     if (q.includes('гарант') || q.includes('возврат') || q.includes('обмен')) {
       return 'На видеокарты, платы, СЖО и SSD действует официальная гарантия до 36 месяцев, на ОЗУ — 60 месяцев, на блоки питания — до 84 месяцев. Возврат возможен в течение 14 дней.';
@@ -723,7 +724,7 @@
           h(
             'p',
             { className: 'text-muted', style: { margin: '0 0 14px', fontSize: '14px' } },
-            '1 бонус = 1 рубль. За каждый заказ комплектующих начисляется 3% бонусами.'
+            '1 бонус = 1 рубль. Начисляем 1% бонусами с каждой покупки, ими можно оплатить до 20% стоимости заказа.'
           ),
           h(
             'div',
@@ -787,6 +788,13 @@
                       'p',
                       { className: 'text-muted', style: { margin: '0 0 6px', fontSize: '13px' } },
                       `Доп. опции: ${ord.addons.join(', ')}`
+                    )
+                  : null,
+                ord.bonusesUsed > 0
+                  ? h(
+                      'p',
+                      { style: { margin: '0 0 6px', fontSize: '13px', color: 'var(--color-success-text)' } },
+                      `Списано бонусов: −${store.formatPrice(ord.bonusesUsed)}`
                     )
                   : null,
                 h(
@@ -926,6 +934,8 @@
     const [qty, setQty] = useState(1);
     const [delivery, setDelivery] = useState('pickup');
     const [selectedAddons, setSelectedAddons] = useState([]);
+    const [useBonuses, setUseBonuses] = useState(false);
+    const [bonusInput, setBonusInput] = useState(Number(profile.bonusPoints) || 0);
     const [name, setName] = useState(profile.name || '');
     const [phone, setPhone] = useState(profile.phone || '');
     const [email, setEmail] = useState(profile.email || '');
@@ -934,6 +944,7 @@
     const [submittedOrder, setSubmittedOrder] = useState(null);
 
     const product = store.getProductById(productId);
+    const availableBalance = Number(profile.bonusPoints) || 0;
 
     const toggleAddon = (id) => {
       setSelectedAddons((prev) =>
@@ -948,11 +959,29 @@
       const deliveryPrice =
         delivery === 'pickup' ? 0 : delivery === 'express' ? 890 : baseTotal >= 30000 ? 0 : 490;
 
-      const finalTotal = Math.max(0, baseTotal + addonsSum + deliveryPrice);
-      const bonusCashback = Math.max(100, Math.round(finalTotal * 0.03));
+      const subtotal = baseTotal + addonsSum;
+      const maxRedeemable = Math.max(
+        0,
+        Math.min(availableBalance, Math.floor(subtotal * store.MAX_BONUS_SHARE))
+      );
+      const bonusesUsed = useBonuses
+        ? Math.max(0, Math.min(Number(bonusInput) || 0, maxRedeemable))
+        : 0;
 
-      return { baseTotal, addonObjs, addonsSum, deliveryPrice, finalTotal, bonusCashback };
-    }, [product, qty, selectedAddons, delivery]);
+      const finalTotal = Math.max(0, subtotal + deliveryPrice - bonusesUsed);
+      const bonusCashback = store.calcCashback(finalTotal);
+
+      return {
+        baseTotal,
+        addonObjs,
+        addonsSum,
+        deliveryPrice,
+        maxRedeemable,
+        bonusesUsed,
+        finalTotal,
+        bonusCashback,
+      };
+    }, [product, qty, selectedAddons, delivery, useBonuses, bonusInput, availableBalance]);
 
     const deliveryLabels = {
       pickup: 'Самовывоз из пункта выдачи (пр-т Вернадского, 78)',
@@ -972,8 +1001,10 @@
         addons: calc.addonObjs.map((a) => a.title),
         delivery: deliveryLabels[delivery],
         total: calc.finalTotal,
+        bonusesUsed: calc.bonusesUsed,
       });
 
+      setUseBonuses(false);
       setSubmittedOrder(result);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -990,9 +1021,12 @@
               role: 'status',
             },
             h('strong', null, `Заказ #${submittedOrder.order.orderNumber} успешно оформлен! `),
+            submittedOrder.bonusesUsed > 0
+              ? `Списано ${submittedOrder.bonusesUsed} Б. `
+              : '',
             `В `,
             h('a', { href: 'account.html' }, 'Личном кабинете'),
-            ` начислено +${submittedOrder.bonusEarned} бонусов и сохранена история заказа.`
+            ` начислено +${submittedOrder.bonusEarned} Б (1%) и сохранена история заказа.`
           )
         : null,
       h(
@@ -1104,7 +1138,57 @@
             h(
               'fieldset',
               { className: 'order-form__fieldset' },
-              h('legend', { className: 'order-form__legend' }, '3. Контакты получателя'),
+              h('legend', { className: 'order-form__legend' }, '3. Бонусы CoreClub'),
+              h(
+                'div',
+                { className: 'order-form__field order-form__field--checkbox' },
+                h(
+                  'label',
+                  { className: 'order-form__label', htmlFor: 'cfg-use-bonuses' },
+                  h('input', {
+                    id: 'cfg-use-bonuses',
+                    type: 'checkbox',
+                    disabled: calc.maxRedeemable <= 0,
+                    checked: useBonuses && calc.maxRedeemable > 0,
+                    onChange: (e) => {
+                      const checked = e.target.checked;
+                      setUseBonuses(checked);
+                      if (checked) setBonusInput(calc.maxRedeemable);
+                    },
+                  }),
+                  h(
+                    'span',
+                    null,
+                    calc.maxRedeemable > 0
+                      ? `Списать бонусы CoreClub (на счёте ${availableBalance.toLocaleString('ru-RU')} Б, можно списать до ${calc.maxRedeemable.toLocaleString('ru-RU')} Б)`
+                      : 'На бонусном счёте пока нет доступных баллов для списания'
+                  )
+                )
+              ),
+              useBonuses && calc.maxRedeemable > 0
+                ? h(
+                    'div',
+                    { className: 'order-form__field' },
+                    h('label', { className: 'order-form__label', htmlFor: 'cfg-bonus-amount' }, 'Сколько бонусов списать (1 Б = 1 руб., до 20% от заказа)'),
+                    h('input', {
+                      className: 'order-form__input',
+                      id: 'cfg-bonus-amount',
+                      type: 'number',
+                      min: 0,
+                      max: calc.maxRedeemable,
+                      value: Math.min(bonusInput, calc.maxRedeemable),
+                      onChange: (e) =>
+                        setBonusInput(
+                          Math.max(0, Math.min(calc.maxRedeemable, Number(e.target.value) || 0))
+                        ),
+                    })
+                  )
+                : null
+            ),
+            h(
+              'fieldset',
+              { className: 'order-form__fieldset' },
+              h('legend', { className: 'order-form__legend' }, '4. Контакты получателя'),
               h(
                 'div',
                 { className: 'order-form__row' },
@@ -1223,10 +1307,18 @@
                 h('span', null, 'Доставка:'),
                 h('strong', null, calc.deliveryPrice === 0 ? 'Бесплатно' : `+${store.formatPrice(calc.deliveryPrice)}`)
               ),
+              calc.bonusesUsed > 0
+                ? h(
+                    'li',
+                    { className: 'order-summary__item' },
+                    h('span', null, 'Списание бонусов:'),
+                    h('strong', { style: { color: 'var(--color-success)' } }, `−${store.formatPrice(calc.bonusesUsed)}`)
+                  )
+                : null,
               h(
                 'li',
                 { className: 'order-summary__item' },
-                h('span', null, 'Бонусы CoreClub:'),
+                h('span', null, 'Начислим бонусов (1%):'),
                 h('strong', { style: { color: 'var(--color-primary-light)' } }, `+${calc.bonusCashback} Б`)
               )
             ),
@@ -1249,6 +1341,7 @@
                     setQty(1);
                     setDelivery('pickup');
                     setSelectedAddons([]);
+                    setUseBonuses(false);
                     setComment('');
                   },
                 },

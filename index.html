@@ -325,9 +325,66 @@
           <h2 class="section__title">Отзывы покупателей</h2>
           <p class="section__text">Мнения клиентов о качестве комплектующих, проверке на выдаче и доставке в «CoreMirea».</p>
         </div>
+
+        <div class="reviews__controls" aria-label="Навигация по отзывам">
+          <button class="reviews__nav-btn" type="button" id="reviews-prev" aria-label="Предыдущие отзывы" title="Листать назад">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="reviews__nav-btn" type="button" id="reviews-next" aria-label="Следующие отзывы" title="Листать вперёд">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div class="reviews__list">
+      <div class="reviews__list" id="reviews-list">
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Белячков Артём</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: AMD Ryzen 7 7800X3D + ASUS TUF B650-PLUS WIFI</p>
+          <p class="review-card__text">
+            «Брал процессор и материнскую плату на AM5. При выдаче вместе с менеджером осмотрели контакты сокета, всё в заводских пломбах. Дома собрал — запустилось с первого раза, температуры в играх отличные».
+          </p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Серебрянников Матвей</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: G.Skill Trident Z5 RGB 32 ГБ DDR5 + СЖО Corsair H150i</p>
+          <p class="review-card__text">
+            «Память на чипах Hynix без проблем взяла профиль 6000 CL30, водянка тихая даже под полной нагрузкой. Порадовало, что часть суммы удалось сразу оплатить накопленными бонусами CoreClub».
+          </p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Явдощук Дмитрий</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: Corsair RM850e 850W 80+ Gold + Thermaltake View ARGB</p>
+          <p class="review-card__text">
+            «Искал именно блок питания ATX 3.0 с родным кабелем 12VHPWR без переходников. Здесь оказалась лучшая цена и наличие на складе. Привезли курьером в тот же вечер, корпус пришёл в идеальной упаковке».
+          </p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-card__top">
+            <span class="review-card__author">Оганисян Артур</span>
+            <span class="review-card__rating" aria-label="Оценка 5 из 5">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span>
+          </div>
+          <p class="review-card__meta">Покупка: Palit GeForce RTX 4070 SUPER 12GB + Samsung 980 PRO 1 ТБ</p>
+          <p class="review-card__text">
+            «Заказывал видеокарту и NVMe-диск самовывозом на Вернадского. Проверили карту на стенде — ни малейшего писка дросселей, чип холодный. Сервис чёткий и без навязывания лишних услуг».
+          </p>
+        </article>
+
         <article class="review-card">
           <div class="review-card__top">
             <span class="review-card__author">Максим Соколов</span>
@@ -569,6 +626,13 @@
         <div class="order-form__field">
           <label class="order-form__label" for="order-email">E-mail для резерва</label>
           <input class="order-form__input" id="order-email" name="email" type="email" placeholder="mail@example.ru">
+        </div>
+
+        <div class="order-form__field order-form__field--checkbox">
+          <label class="order-form__label" for="order-use-bonuses">
+            <input id="order-use-bonuses" name="use_bonuses" type="checkbox">
+            <span id="order-bonus-label">Списать бонусы CoreClub (до 20% заказа)</span>
+          </label>
         </div>
 
         <div class="order-form__field order-form__field--checkbox">

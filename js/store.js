@@ -369,12 +369,15 @@
     },
   ];
 
+  const BONUS_RATE = 0.01;
+  const MAX_BONUS_SHARE = 0.2;
+
   const DEFAULT_PROFILE = {
     name: 'Георгий Крапчатов',
     email: 'g.krapchatov@mail.ru',
     phone: '+7 (900) 555-24-80',
     address: 'г. Москва, пр-т Вернадского, д. 78',
-    bonusPoints: 3450,
+    bonusPoints: 1200,
   };
 
   const DEFAULT_ORDERS = [
@@ -462,8 +465,25 @@
     return [...DEFAULT_ORDERS];
   };
 
-  const addOrder = ({ productName, addons = [], delivery = 'Самовывоз из шоурума', total = 0 }) => {
+  const calcMaxRedeemable = (subtotal) => {
+    const balance = Number(getProfile().bonusPoints) || 0;
+    const capByOrder = Math.floor((Number(subtotal) || 0) * MAX_BONUS_SHARE);
+    return Math.max(0, Math.min(balance, capByOrder));
+  };
+
+  const calcCashback = (paidAmount) =>
+    Math.max(50, Math.round((Number(paidAmount) || 0) * BONUS_RATE));
+
+  const addOrder = ({
+    productName,
+    addons = [],
+    delivery = 'Самовывоз из шоурума',
+    total = 0,
+    bonusesUsed = 0,
+  }) => {
     const orders = getOrders();
+    const profile = getProfile();
+    const safeUsed = Math.max(0, Math.min(Number(bonusesUsed) || 0, Number(profile.bonusPoints) || 0));
     const randomNum = Math.floor(510 + Math.random() * 480);
     const today = new Date().toISOString().slice(0, 10);
     const newOrder = {
@@ -472,6 +492,7 @@
       productName,
       addons,
       delivery,
+      bonusesUsed: safeUsed,
       total: Number(total) || 0,
       status: 'Принят в обработку',
       isDone: false,
@@ -479,12 +500,12 @@
     const nextOrders = [newOrder, ...orders];
     safeWriteJson(STORAGE_KEYS.ORDERS, nextOrders);
 
-    const bonusEarned = Math.max(100, Math.round((Number(total) || 0) * 0.03));
-    const profile = getProfile();
-    saveProfile({ bonusPoints: (Number(profile.bonusPoints) || 0) + bonusEarned });
+    const bonusEarned = calcCashback(total);
+    const nextBalance = Math.max(0, (Number(profile.bonusPoints) || 0) - safeUsed + bonusEarned);
+    saveProfile({ bonusPoints: nextBalance });
 
     emitChange({ type: 'orders', order: newOrder });
-    return { order: newOrder, bonusEarned };
+    return { order: newOrder, bonusEarned, bonusesUsed: safeUsed };
   };
 
   const getProductById = (id) =>
@@ -498,12 +519,16 @@
   window.ElectroStore = {
     PRODUCTS,
     ADDONS,
+    BONUS_RATE,
+    MAX_BONUS_SHARE,
     formatPrice,
     getTheme,
     setTheme,
     getProfile,
     saveProfile,
     getOrders,
+    calcMaxRedeemable,
+    calcCashback,
     addOrder,
     getProductById,
     getProductByName,

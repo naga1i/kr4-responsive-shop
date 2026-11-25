@@ -88,7 +88,7 @@
               <span class="store-stats__label">Готовность к самовывозу</span>
             </div>
             <div class="store-stats__item">
-              <span class="store-stats__value">3%</span>
+              <span class="store-stats__value">1%</span>
               <span class="store-stats__label">Бонусами с каждой покупки</span>
             </div>
           </div>
@@ -156,7 +156,7 @@
         <article class="contact-card">
           <h2 class="contact-card__title">Бонусная программа CoreClub</h2>
           <p class="section__text" style="margin-bottom: 16px;">
-            За каждый заказ комплектующих начисляется 3% бонусами на счёт в Личном кабинете (1 бонус = 1 рубль).
+            За каждый заказ комплектующих начисляется 1% бонусами на счёт в Личном кабинете (1 бонус = 1 рубль). Накопленными баллами можно оплатить до 20% следующего заказа.
           </p>
           <div>
             <a class="button button--secondary button--sm" href="account.html">Открыть Личный кабинет</a>
@@ -378,6 +378,13 @@
         <div class="order-form__field">
           <label class="order-form__label" for="order-email">E-mail для резерва</label>
           <input class="order-form__input" id="order-email" name="email" type="email" placeholder="mail@example.ru">
+        </div>
+
+        <div class="order-form__field order-form__field--checkbox">
+          <label class="order-form__label" for="order-use-bonuses">
+            <input id="order-use-bonuses" name="use_bonuses" type="checkbox">
+            <span id="order-bonus-label">Списать бонусы CoreClub (до 20% заказа)</span>
+          </label>
         </div>
 
         <div class="order-form__field order-form__field--checkbox">
