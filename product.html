@@ -394,6 +394,20 @@
           </label>
         </div>
 
+        <div class="order-form__field" id="order-bonus-controls" hidden>
+          <label class="order-form__label" for="order-bonus-amount">Сколько бонусов списать (1 Б = 1 руб.)</label>
+          <div class="bonus-slider-row">
+            <div class="bonus-slider-wrap">
+              <input class="bonus-slider" id="order-bonus-range" type="range" min="0" max="0" step="1" value="0" aria-label="Выбор количества списываемых бонусов ползунком">
+              <div class="bonus-slider__scale">
+                <span>0 Б</span>
+                <span id="order-bonus-max">0 Б</span>
+              </div>
+            </div>
+            <input class="order-form__input" id="order-bonus-amount" type="number" min="0" max="0" value="0">
+          </div>
+        </div>
+
         <div class="order-form__field order-form__field--checkbox">
           <label class="order-form__label" for="order-agreement">
             <input id="order-agreement" name="agreement" type="checkbox" required checked>

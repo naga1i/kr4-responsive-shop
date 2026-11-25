@@ -74,9 +74,19 @@
   const quickQtyInput = document.getElementById('order-qty');
   const bonusCheckbox = document.getElementById('order-use-bonuses');
   const bonusLabelText = document.getElementById('order-bonus-label');
+  const bonusControls = document.getElementById('order-bonus-controls');
+  const bonusRange = document.getElementById('order-bonus-range');
+  const bonusAmount = document.getElementById('order-bonus-amount');
+  const bonusMaxLabel = document.getElementById('order-bonus-max');
   const successMessage = document.getElementById('success-message');
 
-  const refreshDialogPricing = () => {
+  const getSelectedDialogBonuses = (maxRedeemable) => {
+    if (!bonusCheckbox || !bonusCheckbox.checked || maxRedeemable <= 0) return 0;
+    const raw = bonusAmount ? Number(bonusAmount.value) : maxRedeemable;
+    return Math.max(0, Math.min(maxRedeemable, Number.isFinite(raw) ? raw : 0));
+  };
+
+  const refreshDialogPricing = (resetToMax = false) => {
     if (!quickProductSelect || !dialogProductName) return;
     const product = store.getProductById(Number(quickProductSelect.value));
     const qty = Math.max(1, Number(quickQtyInput ? quickQtyInput.value : 1));
@@ -89,11 +99,31 @@
       const balance = Number(store.getProfile().bonusPoints) || 0;
       bonusLabelText.textContent =
         maxRedeemable > 0
-          ? `Списать ${maxRedeemable.toLocaleString('ru-RU')} бонусов (на счёте ${balance.toLocaleString('ru-RU')} Б, до 20% заказа)`
+          ? `Списать бонусы CoreClub (на счёте ${balance.toLocaleString('ru-RU')} Б, доступно до ${maxRedeemable.toLocaleString('ru-RU')} Б)`
           : 'На бонусном счёте нет доступных баллов';
     }
 
-    const used = bonusCheckbox && bonusCheckbox.checked ? maxRedeemable : 0;
+    if (bonusControls && bonusRange && bonusAmount) {
+      const showControls = Boolean(bonusCheckbox && bonusCheckbox.checked && maxRedeemable > 0);
+      bonusControls.hidden = !showControls;
+      bonusRange.max = String(maxRedeemable);
+      bonusAmount.max = String(maxRedeemable);
+      if (bonusMaxLabel) {
+        bonusMaxLabel.textContent = `${maxRedeemable.toLocaleString('ru-RU')} Б`;
+      }
+      if (showControls) {
+        const nextVal = resetToMax
+          ? maxRedeemable
+          : Math.max(0, Math.min(maxRedeemable, Number(bonusAmount.value) || 0));
+        bonusRange.value = String(nextVal);
+        bonusAmount.value = String(nextVal);
+      } else {
+        bonusRange.value = '0';
+        bonusAmount.value = '0';
+      }
+    }
+
+    const used = getSelectedDialogBonuses(maxRedeemable);
     const finalPrice = Math.max(0, subtotal - used);
     dialogProductName.textContent =
       used > 0
@@ -141,9 +171,23 @@
   });
 
   if (orderDialog && orderForm) {
-    if (quickProductSelect) quickProductSelect.addEventListener('change', refreshDialogPricing);
-    if (quickQtyInput) quickQtyInput.addEventListener('input', refreshDialogPricing);
-    if (bonusCheckbox) bonusCheckbox.addEventListener('change', refreshDialogPricing);
+    if (quickProductSelect) quickProductSelect.addEventListener('change', () => refreshDialogPricing(false));
+    if (quickQtyInput) quickQtyInput.addEventListener('input', () => refreshDialogPricing(false));
+    if (bonusCheckbox) bonusCheckbox.addEventListener('change', () => refreshDialogPricing(true));
+
+    if (bonusRange && bonusAmount) {
+      bonusRange.addEventListener('input', () => {
+        bonusAmount.value = bonusRange.value;
+        refreshDialogPricing(false);
+      });
+
+      bonusAmount.addEventListener('input', () => {
+        const maxVal = Number(bonusRange.max) || 0;
+        const clamped = Math.max(0, Math.min(maxVal, Number(bonusAmount.value) || 0));
+        bonusRange.value = String(clamped);
+        refreshDialogPricing(false);
+      });
+    }
 
     if (closeDialogButton) {
       closeDialogButton.addEventListener('click', () => orderDialog.close());
@@ -188,8 +232,8 @@
       const product = store.getProductById(chosenId);
       const qty = Math.max(1, Number(quickQtyInput ? quickQtyInput.value : 1));
       const subtotal = product.price * qty;
-      const bonusesUsed =
-        bonusCheckbox && bonusCheckbox.checked ? store.calcMaxRedeemable(subtotal) : 0;
+      const maxRedeemable = store.calcMaxRedeemable(subtotal);
+      const bonusesUsed = getSelectedDialogBonuses(maxRedeemable);
       const deliverySelect = document.getElementById('order-delivery');
       const deliveryLabel = deliverySelect
         ? deliverySelect.options[deliverySelect.selectedIndex].text
